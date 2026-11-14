@@ -1,0 +1,10 @@
+# LakePrune demo configuration.
+lake_root: ../fixtures/lake
+queries: queries.yaml
+tables:
+- readings
+- events
+- stations
+database: ../runtime/lakeprune.db
+reports: ../runtime/reports
+fail_on: high

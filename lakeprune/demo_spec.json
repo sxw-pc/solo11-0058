@@ -1,0 +1,446 @@
+{
+  "queries": [
+    {
+      "query_id": "q_readings_hot_day",
+      "table": "readings",
+      "select": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "expected_columns": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "where": "dt >= '2024-01-02' AND value > 40.0",
+      "description": "Find hot readings from the latest two days."
+    },
+    {
+      "query_id": "q_readings_null_humidity",
+      "table": "readings",
+      "select": [
+        "station_id",
+        "humidity"
+      ],
+      "expected_columns": [
+        "station_id",
+        "humidity"
+      ],
+      "where": "dt = '2024-01-02' AND humidity IS NULL",
+      "description": "Find second-day readings with missing humidity."
+    },
+    {
+      "query_id": "q_events_battery",
+      "table": "events",
+      "select": [
+        "event_id",
+        "status",
+        "battery_pct"
+      ],
+      "expected_columns": [
+        "event_id",
+        "status",
+        "battery_pct"
+      ],
+      "where": "status IN ('ok', 'retry') AND battery_pct >= 20",
+      "description": "Find healthy or retrying events with enough battery."
+    },
+    {
+      "query_id": "q_stations_active",
+      "table": "stations",
+      "select": [
+        "station_id",
+        "active"
+      ],
+      "expected_columns": [
+        "station_id",
+        "active"
+      ],
+      "where": "active = true",
+      "description": "List active monitoring stations."
+    },
+    {
+      "query_id": "q_readings_window",
+      "table": "readings",
+      "select": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "expected_columns": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "where": "dt BETWEEN '2024-01-02' AND '2024-01-03' AND value >= 12.5",
+      "description": "Inspect a two-day measurement window."
+    },
+    {
+      "query_id": "q_readings_upper_region",
+      "table": "readings",
+      "select": [
+        "station_id",
+        "region"
+      ],
+      "expected_columns": [
+        "station_id",
+        "region"
+      ],
+      "where": "region = 'R1'",
+      "description": "Demonstrate case-sensitive partition comparison."
+    },
+    {
+      "query_id": "q_stations_notes",
+      "table": "stations",
+      "select": [
+        "station_id",
+        "notes"
+      ],
+      "expected_columns": [
+        "station_id",
+        "notes"
+      ],
+      "where": "notes IS NOT NULL",
+      "description": "List stations with operational notes."
+    }
+  ],
+  "tables": {
+    "readings": {
+      "format": "csv",
+      "columns": {
+        "station_id": "string",
+        "observed_at": "datetime",
+        "value": "float",
+        "humidity": "float",
+        "dt": "date",
+        "region": "string"
+      },
+      "partition_columns": [
+        "dt",
+        "region"
+      ],
+      "files": [
+        {
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-01",
+              "observed_at": "2024-01-01T00:10:00",
+              "value": 10.5,
+              "humidity": 40.0
+            },
+            {
+              "station_id": "station-demo-02",
+              "observed_at": "2024-01-01T01:10:00",
+              "value": 11.2,
+              "humidity": 41.0
+            },
+            {
+              "station_id": "station-demo-01",
+              "observed_at": "2024-01-01T02:10:00",
+              "value": 12.0,
+              "humidity": 42.0
+            }
+          ]
+        },
+        {
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-02",
+              "observed_at": "2024-01-01T03:10:00",
+              "value": 9.5,
+              "humidity": 38.0
+            },
+            {
+              "station_id": "station-demo-03",
+              "observed_at": "2024-01-01T04:10:00",
+              "value": 10.2,
+              "humidity": null
+            }
+          ]
+        },
+        {
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-01",
+              "observed_at": "2024-01-02T00:10:00",
+              "value": 42.0,
+              "humidity": 55.0
+            },
+            {
+              "station_id": "station-demo-01",
+              "observed_at": "2024-01-02T01:10:00",
+              "value": 15.0,
+              "humidity": 45.0
+            },
+            {
+              "station_id": "station-demo-02",
+              "observed_at": "2024-01-02T02:10:00",
+              "value": 12.2,
+              "humidity": 44.0
+            }
+          ],
+          "corrupt_stats": {
+            "value": {
+              "max": 39.0
+            }
+          }
+        },
+        {
+          "path": "dt=2024-01-02/region=r2/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r2"
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-03",
+              "observed_at": "2024-01-02T03:10:00",
+              "value": 30.0,
+              "humidity": 60.0
+            },
+            {
+              "station_id": "station-demo-02",
+              "observed_at": "2024-01-02T04:10:00",
+              "value": 31.5,
+              "humidity": null
+            }
+          ],
+          "missing_stats": [
+            "humidity"
+          ]
+        },
+        {
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-01",
+              "observed_at": "2024-01-03T00:10:00",
+              "value": 20.0,
+              "humidity": null
+            },
+            {
+              "station_id": "station-demo-02",
+              "observed_at": "2024-01-03T01:10:00",
+              "value": 22.0,
+              "humidity": 47.0
+            },
+            {
+              "station_id": "station-demo-03",
+              "observed_at": "2024-01-03T02:10:00",
+              "value": 25.0,
+              "humidity": 51.0
+            }
+          ]
+        },
+        {
+          "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-03",
+            "region": null
+          },
+          "rows": [
+            {
+              "station_id": "station-demo-04",
+              "observed_at": "2024-01-03T03:10:00",
+              "value": 18.0,
+              "humidity": 39.0
+            },
+            {
+              "station_id": "station-demo-04",
+              "observed_at": "2024-01-03T04:10:00",
+              "value": 19.2,
+              "humidity": 41.0
+            }
+          ]
+        }
+      ]
+    },
+    "events": {
+      "format": "csv",
+      "columns": {
+        "event_id": "string",
+        "status": "string",
+        "battery_pct": "int",
+        "recorded_at": "datetime",
+        "dt": "date",
+        "region": "string"
+      },
+      "partition_columns": [
+        "dt",
+        "region"
+      ],
+      "files": [
+        {
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "rows": [
+            {
+              "event_id": "evt-demo-1001",
+              "status": "ok",
+              "battery_pct": 10,
+              "recorded_at": "2024-01-01T05:00:00"
+            },
+            {
+              "event_id": "evt-demo-1002",
+              "status": "ok",
+              "battery_pct": 15,
+              "recorded_at": "2024-01-01T06:00:00"
+            }
+          ]
+        },
+        {
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "rows": [
+            {
+              "event_id": "evt-demo-2001",
+              "status": "retry",
+              "battery_pct": 20,
+              "recorded_at": "2024-01-01T07:00:00"
+            },
+            {
+              "event_id": "evt-demo-2002",
+              "status": "retry",
+              "battery_pct": 30,
+              "recorded_at": "2024-01-01T08:00:00"
+            }
+          ],
+          "missing_stats": [
+            "battery_pct"
+          ]
+        },
+        {
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "rows": [
+            {
+              "event_id": "evt-demo-3001",
+              "status": "ok",
+              "battery_pct": 25,
+              "recorded_at": "2024-01-02T05:00:00"
+            },
+            {
+              "event_id": "evt-demo-3002",
+              "status": "retry",
+              "battery_pct": 18,
+              "recorded_at": "2024-01-02T06:00:00"
+            },
+            {
+              "event_id": "evt-demo-3003",
+              "status": "ok",
+              "battery_pct": 88,
+              "recorded_at": "2024-01-02T07:00:00"
+            }
+          ],
+          "data_rows": [
+            {
+              "event_id": "evt-demo-3001",
+              "status": "ok",
+              "battery_pct": 25,
+              "recorded_at": "2024-01-02T05:00:00"
+            },
+            {
+              "event_id": "evt-demo-3002",
+              "status": "retry",
+              "battery_pct": 18,
+              "recorded_at": "2024-01-02T06:00:00"
+            },
+            {
+              "event_id": "evt-demo-3003",
+              "status": "ok",
+              "battery_pct": "retry",
+              "recorded_at": "2024-01-02T07:00:00"
+            }
+          ]
+        },
+        {
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "rows": []
+        }
+      ]
+    },
+    "stations": {
+      "format": "jsonl",
+      "columns": {
+        "station_id": "string",
+        "active": "bool",
+        "elevation_m": "int",
+        "opened_on": "date",
+        "notes": "string"
+      },
+      "partition_columns": [],
+      "files": [
+        {
+          "path": "data.jsonl",
+          "partition": {},
+          "rows": [
+            {
+              "station_id": "station-demo-01",
+              "active": true,
+              "elevation_m": 120,
+              "opened_on": "2021-04-01",
+              "notes": "ridge site"
+            },
+            {
+              "station_id": "station-demo-02",
+              "active": false,
+              "elevation_m": 88,
+              "opened_on": "2022-09-15",
+              "notes": null
+            },
+            {
+              "station_id": "station-demo-03",
+              "active": true,
+              "elevation_m": 210,
+              "opened_on": "2023-01-20",
+              "notes": "coastal backup"
+            },
+            {
+              "station_id": "station-demo-04",
+              "active": true,
+              "elevation_m": 45,
+              "opened_on": "2023-11-02",
+              "notes": null
+            }
+          ],
+          "missing_stats": [
+            "notes"
+          ]
+        }
+      ]
+    }
+  }
+}

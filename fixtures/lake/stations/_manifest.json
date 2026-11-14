@@ -1,0 +1,50 @@
+{
+  "columns": {
+    "active": "bool",
+    "elevation_m": "int",
+    "notes": "string",
+    "opened_on": "date",
+    "station_id": "string"
+  },
+  "files": [
+    {
+      "columns": {
+        "active": {
+          "max": true,
+          "min": false,
+          "null_count": 0,
+          "type": "bool"
+        },
+        "elevation_m": {
+          "max": 210,
+          "min": 45,
+          "null_count": 0,
+          "type": "int"
+        },
+        "opened_on": {
+          "max": "2023-11-02",
+          "min": "2021-04-01",
+          "null_count": 0,
+          "type": "date"
+        },
+        "station_id": {
+          "max": "station-demo-04",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        }
+      },
+      "partition": {},
+      "path": "data.jsonl",
+      "row_count": 4,
+      "sha256": "0191789df88e551b8afab78437b59179caa2ed838959a86a338c82f444cbdf46",
+      "size_bytes": 467
+    }
+  ],
+  "format": "jsonl",
+  "partition_columns": [],
+  "partitions": [
+    {}
+  ],
+  "table": "stations"
+}
