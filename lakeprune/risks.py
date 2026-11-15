@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import Any, Iterable, Mapping
 
 from lakeprune.models import ManifestIssue, Risk
@@ -89,6 +90,15 @@ def from_query_plan(plan: QueryPlan) -> list[Risk]:
              "untrusted_columns": list(item.untrusted_columns),
              "stats_reasons": list(item.stats_reasons), "statistics": dict(item.statistics)},
         ))
+    for item in plan.files:
+        if item.margin_tightened:
+            result.append(make_risk(
+                "BOUNDARY_RISK", "warn", query.query_id, query.table, item.path,
+                "stats prune tightened to maybe_match: boundary margin below recording resolution",
+                {"stats_raw_decision": item.stats_raw_decision, "min_margin_units": item.min_margin_units,
+                 "effective_stats_decision": item.stats_decision,
+                 "margins": [asdict(margin) for margin in item.margins]},
+            ))
     if plan.is_full_scan:
         result.append(make_risk(
             "FULL_SCAN_RISK", "warn", query.query_id, query.table, None,

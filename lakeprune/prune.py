@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any, Mapping
 
 from lakeprune.models import FileEntry, QuerySpec, TableManifest
@@ -10,6 +10,7 @@ from lakeprune.partition import evaluate_partition, partition_label
 from lakeprune.predicate_ast import Expr, ast_to_dict, referenced_columns
 from lakeprune.stats import (
     MUST_NOT_MATCH,
+    LeafMargin,
     StatsOutcome,
     declared_stats_decision,
     evaluate_file,
@@ -30,6 +31,10 @@ class FilePlan:
     declared_stats_decision: str
     would_declared_prune: bool
     statistics: Mapping[str, Any]
+    stats_raw_decision: str = ""
+    margin_tightened: bool = False
+    min_margin_units: float | None = None
+    margins: tuple[LeafMargin, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -46,6 +51,10 @@ class FilePlan:
             "declared_stats_decision": self.declared_stats_decision,
             "would_declared_prune": self.would_declared_prune,
             "statistics": dict(self.statistics),
+            "stats_raw_decision": self.stats_raw_decision,
+            "margin_tightened": self.margin_tightened,
+            "min_margin_units": self.min_margin_units,
+            "margins": [asdict(margin) for margin in self.margins],
         }
 
 @dataclass(frozen=True)
@@ -98,6 +107,7 @@ class QueryPlan:
                 "total_bytes": self.total_bytes,
                 "estimated_scan_bytes": self.estimated_scan_bytes,
                 "prune_ratio": self.prune_ratio,
+                "margin_tightened_files": sum(1 for item in self.files if item.margin_tightened),
                 "stats_decisions": {
                     key: self.stats_counts[key] for key in sorted(self.stats_counts)
                 },
@@ -112,14 +122,11 @@ class QueryPlan:
             "files": [item.to_dict() for item in self.files],
         }
 
-def _statistics_snapshot(
-    entry: FileEntry, columns: tuple[str, ...]
-) -> dict[str, Any]:
-    snapshot: dict[str, Any] = {}
-    for column in columns:
-        stats = entry.columns.get(column)
-        snapshot[column] = stats.to_dict() if stats else None
-    return snapshot
+def _statistics_snapshot(entry: FileEntry, columns: tuple[str, ...]) -> dict[str, Any]:
+    return {
+        column: stats.to_dict() if (stats := entry.columns.get(column)) else None
+        for column in columns
+    }
 
 def build_query_plan(
     query: QuerySpec,
@@ -148,11 +155,7 @@ def build_query_plan(
             partitions["undetermined"] += 1
     file_plans: list[FilePlan] = []
     stats_counts = {
-        "must_match": 0,
-        "must_not_match": 0,
-        "maybe_match": 0,
-        "unknown": 0,
-        "skipped_partition": 0,
+        key: 0 for key in ("must_match", "must_not_match", "maybe_match", "unknown", "skipped_partition")
     }
     partition_pruned_files = 0
     stats_pruned_files = 0
@@ -167,23 +170,11 @@ def build_query_plan(
         if partition_result.decision == "pruned":
             partition_pruned_files += 1
             stats_counts["skipped_partition"] += 1
-            file_plans.append(
-                FilePlan(
-                    entry.path,
-                    dict(entry.partition),
-                    "pruned",
-                    partition_result.reasons,
-                    "skipped_partition",
-                    (),
-                    False,
-                    entry.size_bytes,
-                    entry.row_count,
-                    relevant_untrusted,
-                    "",
-                    False,
-                    _statistics_snapshot(entry, referenced),
-                )
-            )
+            file_plans.append(FilePlan(
+                entry.path, dict(entry.partition), "pruned", partition_result.reasons,
+                "skipped_partition", (), False, entry.size_bytes, entry.row_count,
+                relevant_untrusted, "", False, _statistics_snapshot(entry, referenced),
+            ))
             continue
         outcome: StatsOutcome = evaluate_file(
             expression,
@@ -208,23 +199,15 @@ def build_query_plan(
             )
             declared_decision = declared.decision
             would_declared_prune = kept and declared.decision == MUST_NOT_MATCH
-        file_plans.append(
-            FilePlan(
-                entry.path,
-                dict(entry.partition),
-                partition_result.decision,
-                partition_result.reasons,
-                outcome.decision,
-                outcome.reasons,
-                kept,
-                entry.size_bytes,
-                entry.row_count,
-                relevant_untrusted,
-                declared_decision,
-                would_declared_prune,
-                _statistics_snapshot(entry, referenced),
-            )
-        )
+        file_plans.append(FilePlan(
+            entry.path, dict(entry.partition), partition_result.decision,
+            partition_result.reasons, outcome.decision, outcome.reasons, kept,
+            entry.size_bytes, entry.row_count, relevant_untrusted, declared_decision,
+            would_declared_prune, _statistics_snapshot(entry, referenced),
+            outcome.raw_decision, outcome.tightened,
+            min((margin.margin_units for margin in outcome.margins), default=None),
+            outcome.margins,
+        ))
     file_plans.sort(key=lambda item: item.path)
     return QueryPlan(
         query=query,

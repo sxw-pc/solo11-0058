@@ -155,7 +155,7 @@ def load_manifest(lake_root: Path, table: str) -> tuple[TableManifest, list[Mani
             raise _field_error(f"duplicate manifest file path: {rel_path}")
         seen_paths.add(rel_path)
         try:
-            safe_join(lake_root, rel_path)
+            safe_join(lake_root / table, rel_path)
         except ValueError as exc:
             raise ManifestError(str(exc), "E_PATH_UNSAFE") from exc
         declared_partition = _require_mapping(

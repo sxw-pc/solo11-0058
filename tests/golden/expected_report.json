@@ -54,6 +54,18 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [
+            {
+              "classification": "safe",
+              "margin_units": 5.0,
+              "predicate": "battery_pct >= 20",
+              "resolution": 1.0,
+              "separation": 5.0,
+              "type_name": "int"
+            }
+          ],
+          "min_margin_units": 5.0,
           "partition": {
             "dt": "2024-01-01",
             "region": "r1"
@@ -78,6 +90,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "battery_pct >= 20"
           ],
@@ -87,6 +100,9 @@
         {
           "declared_stats_decision": "unknown",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r2"
@@ -106,6 +122,7 @@
             }
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [],
           "untrusted_columns": [
             "battery_pct"
@@ -115,6 +132,9 @@
         {
           "declared_stats_decision": "maybe_match",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r1"
@@ -139,6 +159,7 @@
             }
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [],
           "untrusted_columns": [
             "battery_pct"
@@ -148,6 +169,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": "r1"
@@ -172,6 +196,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "file has zero rows"
           ],
@@ -233,6 +258,7 @@
         "candidate_files": 2,
         "estimated_scan_bytes": 322,
         "full_scan": false,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 4,
         "partition_pruned_files": 0,
         "prune_ratio": 0.363636,
@@ -261,6 +287,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r1"
@@ -282,6 +311,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -289,6 +319,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r2"
@@ -310,6 +343,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -317,6 +351,9 @@
         {
           "declared_stats_decision": "must_not_match",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r1"
@@ -336,6 +373,7 @@
             }
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [],
           "untrusted_columns": [
             "value"
@@ -345,6 +383,18 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [
+            {
+              "classification": "safe",
+              "margin_units": 85000000000.0,
+              "predicate": "value > 40.0",
+              "resolution": 1e-10,
+              "separation": 8.5,
+              "type_name": "float"
+            }
+          ],
+          "min_margin_units": 85000000000.0,
           "partition": {
             "dt": "2024-01-02",
             "region": "r2"
@@ -364,6 +414,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "value > 40.0"
           ],
@@ -373,6 +424,18 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [
+            {
+              "classification": "safe",
+              "margin_units": 208000000000.0,
+              "predicate": "value > 40.0",
+              "resolution": 1e-10,
+              "separation": 20.8,
+              "type_name": "float"
+            }
+          ],
+          "min_margin_units": 208000000000.0,
           "partition": {
             "dt": "2024-01-03",
             "region": null
@@ -392,6 +455,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "value > 40.0"
           ],
@@ -401,6 +465,18 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [
+            {
+              "classification": "safe",
+              "margin_units": 150000000000.0,
+              "predicate": "value > 40.0",
+              "resolution": 1e-10,
+              "separation": 15.0,
+              "type_name": "float"
+            }
+          ],
+          "min_margin_units": 150000000000.0,
           "partition": {
             "dt": "2024-01-03",
             "region": "r1"
@@ -420,6 +496,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "value > 40.0"
           ],
@@ -475,6 +552,7 @@
         "candidate_files": 1,
         "estimated_scan_bytes": 192,
         "full_scan": false,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 4,
         "partition_pruned_files": 2,
         "prune_ratio": 0.807035,
@@ -502,6 +580,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r1"
@@ -523,6 +604,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -530,6 +612,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r2"
@@ -551,6 +636,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -558,6 +644,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r1"
@@ -577,6 +666,7 @@
             }
           },
           "stats_decision": "must_not_match",
+          "stats_raw_decision": "must_not_match",
           "stats_reasons": [
             "humidity IS NULL"
           ],
@@ -586,6 +676,9 @@
         {
           "declared_stats_decision": "unknown",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r2"
@@ -600,6 +693,7 @@
             "humidity": null
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [],
           "untrusted_columns": [
             "humidity"
@@ -609,6 +703,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": null
@@ -630,6 +727,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -637,6 +735,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": "r1"
@@ -658,6 +759,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -705,6 +807,7 @@
         "candidate_files": 1,
         "estimated_scan_bytes": 140,
         "full_scan": false,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 2,
         "partition_pruned_files": 4,
         "prune_ratio": 0.859296,
@@ -732,6 +835,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r1"
@@ -747,6 +853,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -754,6 +861,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r2"
@@ -769,6 +879,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -776,6 +887,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r1"
@@ -791,6 +905,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -798,6 +913,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r2"
@@ -813,6 +931,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -820,6 +939,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": null
@@ -835,6 +957,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -842,6 +965,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": "r1"
@@ -857,6 +983,7 @@
             "region": null
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -893,6 +1020,7 @@
         "candidate_files": 0,
         "estimated_scan_bytes": 0,
         "full_scan": false,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 0,
         "partition_pruned_files": 6,
         "prune_ratio": 1.0,
@@ -921,6 +1049,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r1"
@@ -942,6 +1073,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -949,6 +1081,9 @@
         {
           "declared_stats_decision": "",
           "kept": false,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-01",
             "region": "r2"
@@ -970,6 +1105,7 @@
             }
           },
           "stats_decision": "skipped_partition",
+          "stats_raw_decision": "",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -977,6 +1113,9 @@
         {
           "declared_stats_decision": "maybe_match",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r1"
@@ -996,6 +1135,7 @@
             }
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [],
           "untrusted_columns": [
             "value"
@@ -1005,6 +1145,9 @@
         {
           "declared_stats_decision": "",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-02",
             "region": "r2"
@@ -1024,6 +1167,7 @@
             }
           },
           "stats_decision": "must_match",
+          "stats_raw_decision": "must_match",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -1031,6 +1175,9 @@
         {
           "declared_stats_decision": "",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": null
@@ -1050,6 +1197,7 @@
             }
           },
           "stats_decision": "must_match",
+          "stats_raw_decision": "must_match",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -1057,6 +1205,9 @@
         {
           "declared_stats_decision": "",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {
             "dt": "2024-01-03",
             "region": "r1"
@@ -1076,6 +1227,7 @@
             }
           },
           "stats_decision": "must_match",
+          "stats_raw_decision": "must_match",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -1133,6 +1285,7 @@
         "candidate_files": 4,
         "estimated_scan_bytes": 664,
         "full_scan": false,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 4,
         "partition_pruned_files": 2,
         "prune_ratio": 0.332663,
@@ -1160,6 +1313,9 @@
         {
           "declared_stats_decision": "",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {},
           "partition_decision": "undetermined",
           "partition_reasons": [],
@@ -1175,6 +1331,7 @@
             }
           },
           "stats_decision": "maybe_match",
+          "stats_raw_decision": "maybe_match",
           "stats_reasons": [],
           "untrusted_columns": [],
           "would_declared_prune": false
@@ -1211,6 +1368,7 @@
         "candidate_files": 1,
         "estimated_scan_bytes": 467,
         "full_scan": true,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 1,
         "partition_pruned_files": 0,
         "prune_ratio": 0.0,
@@ -1238,6 +1396,9 @@
         {
           "declared_stats_decision": "unknown",
           "kept": true,
+          "margin_tightened": false,
+          "margins": [],
+          "min_margin_units": null,
           "partition": {},
           "partition_decision": "undetermined",
           "partition_reasons": [],
@@ -1248,6 +1409,7 @@
             "notes": null
           },
           "stats_decision": "unknown",
+          "stats_raw_decision": "unknown",
           "stats_reasons": [
             "notes IS NOT NULL"
           ],
@@ -1283,6 +1445,7 @@
         "candidate_files": 1,
         "estimated_scan_bytes": 467,
         "full_scan": true,
+        "margin_tightened_files": 0,
         "partition_candidate_files": 1,
         "partition_pruned_files": 0,
         "prune_ratio": 0.0,

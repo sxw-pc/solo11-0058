@@ -72,3 +72,34 @@ def test_validate_stats_reports_reasons():
     assert not validate_stats(ColumnStats("int", 1, 2, 3), "int", 2)[0]
     assert "min" in validate_stats(ColumnStats("int", 2, 1, 0), "int", 2)[1]
     assert not validate_stats(ColumnStats("float", 1.0, 2.0, 0), "int", 2)[0]
+
+MARGIN_SCHEMA = {"v": "float", "d": "date", "ts": "datetime", "s": "string", "n": "int"}
+MARGIN_CASES = [
+    ("v > 40.0", "v", ColumnStats("float", 40.0, 40.0, 0), MUST_NOT_MATCH, "exact", False),
+    ("v >= 40.00000000001", "v", ColumnStats("float", 40.0, 40.0, 0), "maybe_match", "tight", True),
+    ("v >= 40.000001", "v", ColumnStats("float", 40.0, 40.0, 0), MUST_NOT_MATCH, "safe", False),
+    ("v < 39.99999999999", "v", ColumnStats("float", 40.0, 41.0, 0), "maybe_match", "tight", True),
+    ("d > '2024-01-03'", "d", ColumnStats("date", "2024-01-01", "2024-01-03", 0), MUST_NOT_MATCH, "exact", False),
+    ("d >= '2024-01-04'", "d", ColumnStats("date", "2024-01-01", "2024-01-03", 0), MUST_NOT_MATCH, "safe", False),
+    ("ts > '2024-01-01T00:00:00'", "ts", ColumnStats("datetime", "2024-01-01T00:00:00", "2024-01-01T00:00:00", 0), MUST_NOT_MATCH, "exact", False),
+    ("ts >= '2024-01-01T00:00:01'", "ts", ColumnStats("datetime", "2024-01-01T00:00:00", "2024-01-01T00:00:00", 0), MUST_NOT_MATCH, "safe", False),
+    ("s > 'gammb'", "s", ColumnStats("string", "alpha", "gamma", 0), MUST_NOT_MATCH, "safe", False),
+    ("n >= 21", "n", ColumnStats("int", 10, 20, 0), MUST_NOT_MATCH, "safe", False),
+]
+
+def test_boundary_margins_classify_and_tighten_conservatively():
+    for expression, column, stats, decision, classification, tightened in MARGIN_CASES:
+        item = FileEntry("p.csv", {}, 4, 100, "0" * 64, {column: stats})
+        outcome = evaluate_file(parse_predicate(expression, MARGIN_SCHEMA), item, MARGIN_SCHEMA)
+        assert (outcome.decision, outcome.raw_decision, outcome.tightened) == (decision, MUST_NOT_MATCH, tightened), expression
+        (margin,) = outcome.margins
+        assert margin.classification == classification and margin.margin_units >= 0, expression
+        assert ("margin tightened" in "; ".join(outcome.reasons)) == tightened, expression
+
+def test_must_match_and_maybe_match_are_never_tightened():
+    item = FileEntry("p.csv", {}, 4, 100, "0" * 64, {"v": ColumnStats("float", 40.0, 40.0, 0)})
+    must = evaluate_file(parse_predicate("v <= 40.0", MARGIN_SCHEMA), item, MARGIN_SCHEMA)
+    assert must.decision == MUST_MATCH and not must.tightened and must.margins == ()
+    wide = FileEntry("p.csv", {}, 4, 100, "0" * 64, {"v": ColumnStats("float", 40.0, 41.0, 0)})
+    maybe = evaluate_file(parse_predicate("v = 40.5", MARGIN_SCHEMA), wide, MARGIN_SCHEMA)
+    assert maybe.decision == "maybe_match" and not maybe.tightened

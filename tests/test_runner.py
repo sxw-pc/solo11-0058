@@ -8,8 +8,9 @@ import yaml
 from lakeprune.config import load_config
 from lakeprune.models import QuerySpecError
 from lakeprune.runner import collect_stats, run_audit
+from lakeprune.storage import get_prune_results
 
-from conftest import PROJECT_ROOT
+from conftest import PROJECT_ROOT, make_table, write_config
 
 def test_demo_report_structure_counts_and_plans(demo_report):
     assert demo_report["project"] == "湖裁验台"
@@ -65,3 +66,24 @@ def test_invalid_query_raises_stable_code(clean_config, tmp_path: Path):
     with pytest.raises(QuerySpecError) as raised:
         run_audit(config, database=tmp_path / "bad.db", report_dir=tmp_path / "bad")
     assert raised.value.code == "E_EMPTY_IN"
+
+def test_margin_tightening_reaches_plan_report_and_ledger(tmp_path: Path):
+    make_table(tmp_path / "lake", "tight", {"v": "float"}, [], [
+        {"path": "a.csv", "partition": {}, "rows": [{"v": 40.0}, {"v": 40.0}]},
+        {"path": "b.csv", "partition": {}, "rows": [{"v": 1.0}, {"v": 2.0}]},
+    ])
+    query = {"query_id": "q_tight", "table": "tight", "select": ["v"],
+             "expected_columns": ["v"], "where": "v >= 40.00000000001"}
+    result = run_audit(load_config(write_config(tmp_path, tmp_path / "lake", [query], ["tight"])))
+    (plan,) = result.report["queries"]
+    files = {item["path"]: item for item in plan["files"]}
+    tight, pruned = files["a.csv"], files["b.csv"]
+    assert tight["stats_decision"] == "maybe_match" and tight["stats_raw_decision"] == "must_not_match"
+    assert tight["margin_tightened"] and tight["min_margin_units"] < 1 and plan["summary"]["margin_tightened_files"] == 1
+    assert tight["margins"][0]["classification"] == "tight" and not pruned["margin_tightened"]
+    assert pruned["stats_decision"] == "must_not_match"
+    assert any(risk["code"] == "BOUNDARY_RISK" and risk["file_path"] == "a.csv"
+               for risk in result.report["risks"])
+    (row,) = [item for item in get_prune_results(tmp_path / "ledger.db", result.run_id)
+              if item["file_path"] == "a.csv"]
+    assert row["stats_decision"] == "maybe_match" and "margin tightened" in row["reason"]

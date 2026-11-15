@@ -59,7 +59,7 @@ config.py ──► manifest.py ──► partition.py
 2. **解析查询**：每个查询按表 schema 解析为 AST；错误转换为带查询 ID 的 `QuerySpecError`，保留原始稳定错误码。
 3. **复核统计**：对每个非分区列重新读取数据、重算 min/max/null_count，并检查文件大小、sha256、行数、声明类型和边界。任何异常的列进入 `untrusted`；文件完整性失败则整文件列不可信。
 4. **分区裁剪**：按分区标签分组，用精确分区赋值求值；非分区列叶子在分区阶段返回 unknown，不误裁。AND/OR/NOT 使用 `{True, False, None}` 三值组合。
-5. **文件裁剪**：对未分区裁剪的文件使用声明统计求值；不可信、缺失或无效统计返回 unknown。分区列始终使用精确分区值，不用文件统计。
+5. **文件裁剪**：对未分区裁剪的文件使用声明统计求值；不可信、缺失或无效统计返回 unknown。分区列始终使用精确分区值，不用文件统计。每个驱动裁剪的谓词叶子还会计算边界余量：以该类型的记录分辨率为单位（float 取 canonical 12 位有效数字量子、int/bool 取 1、date 取 1 天、datetime 取 1 秒、string 取首个不同位置的码点距离），余量 0 表示精确边界决策（依赖运算符严格性，不收紧），小于 1 个单位表示余量不足。余量不足的 `must_not_match` 自动收紧为 `maybe_match`（只增加扫描候选，绝不减少；`must_match` 永不降级），FilePlan 保留收紧前后决定、逐叶子余量数值与原因证据。
 6. **误裁剪证据**：若某文件因不可信统计被保留，但盲信声明统计会得到 `must_not_match`，则标记 `would_declared_prune` 并生成 `MIS_PRUNE_RISK`。
 7. **报告与台账**：报告只包含确定性内容（无 run ID、无时间戳）；运行时间和 run ID 仅进入 SQLite。JSON/Markdown 字节稳定，HTML 结构稳定。
 

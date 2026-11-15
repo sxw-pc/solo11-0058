@@ -62,6 +62,8 @@
 
 证据分别列出日期类片段和 float/大小写类片段。
 
+此外，当某文件的 `must_not_match` 因边界余量不足（谓词边界与声明统计边界的间距低于该类型的记录分辨率）被自动收紧为 `maybe_match` 时，也会按文件生成 `BOUNDARY_RISK`；证据包含收紧前后决定、最小余量（`min_margin_units`）与逐叶子余量明细。
+
 ### `EMPTY_PARTITION`（warn）
 
 manifest 声明了某分区，但该分区没有文件，或所有文件 `row_count == 0`。证据含分区值、文件列表和 `row_count: 0`。空分区不产生数据，但会提示表布局与统计治理问题。
