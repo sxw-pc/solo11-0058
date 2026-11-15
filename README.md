@@ -65,6 +65,8 @@ python -m lakeprune validate-stats --config configs/demo.yaml
 python -m lakeprune audit --config configs/demo.yaml --out runtime/reports --fail-on high
 python -m lakeprune report --run-id <run-id> --format md --db runtime/lakeprune.db
 python -m lakeprune golden --expected tests/golden/expected_report.json --actual runtime/reports/report.json
+python -m lakeprune replay --run-id <run-id> --table readings \
+  --file-path "dt=2024-01-03/region=r1/part-0001.csv" --db runtime/lakeprune.db
 ```
 
 退出码：`0` 表示审计通过或命令成功；`1` 表示配置、输入、查询或运行时错误；`2` 表示存在达到 `--fail-on` 阈值的风险。`demo` 固定返回 `0`，便于生成素材；CI 卡点请使用 `audit --fail-on high`。
@@ -190,11 +192,34 @@ python -m lakeprune golden \
 
 相同 fixture 重复运行应得到字节一致的 `report.json` 与 `report.md`。报告不包含运行 ID 或时间戳；时间信息只写入 SQLite。golden 文件位于 `tests/golden/`。
 
-## 8. 离线与虚构数据声明
+## 8. 单文件重放（replay）
+
+全量 audit 重新扫描整湖代价高；当某个数据文件被替换后，可用 `replay` 只重审这一个文件。给定历史 `run_id`、`table` 和 manifest 相对 `file_path`，重放同时持有两份基准：
+
+- **历史声明统计**：只取台账 `runs.report_json` 里保存的快照，绝不读取当前 `_manifest.json`；
+- **当前实际统计**：对磁盘上该文件的真实数据重新计算。
+
+对该表的**所有查询**（不止命中该文件的查询）按各自已记录的谓词，重新产出该文件的 `partition_decision`、`stats_decision`、`kept`、`declared_stats_decision`、`would_declared_prune`，再与历史记录逐字段比对。关键取舍：
+
+- 分区列不在磁盘数据可重算范围，`partition_decision` 一律沿用历史结果；
+- `declared_stats_decision` 与 `would_declared_prune` 一律以历史声明统计为基准，不拿重算真值计算，避免误裁语义漂移。
+
+状态结论为稳定枚举：`unchanged` / `changed` / `newly_untrusted` / `still_kept` / `newly_pruned`。其中两个相反方向分别表达「新数据让原本保留的文件应被裁掉」（`newly_pruned`）与「旧误裁因数据修复应被复活」（`still_kept`）；某查询历史 `files` 中没有该文件时不报错，按当前判定归为 `newly_pruned` 或 `still_kept`。差异段按字段稳定排序，并带 `recorded->replayed` 方向。
+
+失败路径返回明确错误码且退出非零：`E_REPLAY_RUN_NOT_FOUND`、`E_REPLAY_TABLE_NOT_IN_REPORT`、`E_REPLAY_FILE_NOT_IN_REPORT`、`E_REPLAY_DATA_MISSING`、`E_REPLAY_DATA_READ`，不会静默当作 `unchanged`。
+
+```bash
+python -m lakeprune demo --out runtime
+# 手动替换某个数据文件后：
+python -m lakeprune replay --run-id <run-id> --table readings \
+  --file-path "dt=2024-01-03/region=r1/part-0001.csv" --db runtime/lakeprune.db
+```
+
+## 9. 离线与虚构数据声明
 
 本项目运行期不发起外部网络请求，不访问真实数据源，不下载资源；Web 查看器只绑定 `127.0.0.1` 或 `::1`，仅提供只读 GET 页面和 `/healthz`。所有 fixture、查询、配置、站点号、设备号、状态文本和标识均为合成数据，使用 `demo-*`、`example.invalid` 风格或本地回环地址语义；不包含真实密钥、令牌、证书、公司名、真实域名或真实外部目标地址。详细合规边界见 `docs/COMPLIANCE.md`。
 
-## 9. 已知限制与后续方向
+## 10. 已知限制与后续方向
 
 - 仅支持 CSV/JSONL 复核统计，不支持 Parquet/ORC/Avro footer 或真实对象存储；
 - 统计以文件级 min/max/null_count 为粒度，不做列块、页级或 Bloom filter 下推；

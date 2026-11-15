@@ -10,6 +10,7 @@ from pathlib import Path
 from lakeprune.config import load_config
 from lakeprune.demo_data import prepare_workspace, write_lake
 from lakeprune.models import LakePruneError
+from lakeprune.replay import replay_file
 from lakeprune.report_html import render_html
 from lakeprune.report_json import compare_golden, render_json
 from lakeprune.report_markdown import render_markdown
@@ -122,6 +123,22 @@ def _cmd_golden(args: argparse.Namespace) -> int:
         print(line)
     return 1
 
+
+def _cmd_replay(args: argparse.Namespace) -> int:
+    payload = replay_file(args.db, args.run_id, args.table, args.file_path)
+    rendered = canonical_json(payload)
+    if args.out:
+        path = Path(args.out)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(rendered, encoding="utf-8")
+        print(
+            f"replay: {payload['status']} ({len(payload['queries'])} queries) -> {path}",
+            file=sys.stderr,
+        )
+    else:
+        sys.stdout.write(rendered)
+    return 0
+
 def _cmd_serve(args: argparse.Namespace) -> int:
     serve(args.db, args.port)
     return 0
@@ -154,6 +171,15 @@ def build_parser() -> argparse.ArgumentParser:
     golden.add_argument("--expected", required=True)
     golden.add_argument("--actual", required=True)
     golden.set_defaults(func=_cmd_golden)
+    replay = subparsers.add_parser(
+        "replay", help="re-audit one replaced data file against a historical run"
+    )
+    replay.add_argument("--run-id", required=True)
+    replay.add_argument("--table", required=True)
+    replay.add_argument("--file-path", required=True, help="manifest-relative data file path")
+    replay.add_argument("--db", default="runtime/lakeprune.db")
+    replay.add_argument("--out", default=None, help="optional output file for the replay JSON")
+    replay.set_defaults(func=_cmd_replay)
     serve_parser = subparsers.add_parser("serve", help="start the loopback read-only viewer")
     serve_parser.add_argument("--db", default="runtime/lakeprune.db")
     serve_parser.add_argument("--port", type=int, default=0)

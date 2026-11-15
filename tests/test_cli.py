@@ -50,3 +50,24 @@ def test_audit_gate_report_export_and_golden(tmp_path: Path):
 def test_report_missing_run_returns_nonzero():
     completed = run_cli("report", "--run-id", "missing", "--db", "runtime/no-such.db")
     assert completed.returncode == 1 and "run not found" in completed.stderr
+
+
+def test_replay_subcommand_reports_and_errors(tmp_path: Path):
+    out = tmp_path / "demo"
+    demo = run_cli("demo", "--out", str(out))
+    assert demo.returncode == 0
+    run_id = json.loads(demo.stdout)["run_id"]
+    db = str(out / "lakeprune.db")
+    target = "dt=2024-01-03/region=r1/part-0001.csv"
+    ok = run_cli("replay", "--run-id", run_id, "--table", "readings",
+                 "--file-path", target, "--db", db)
+    assert ok.returncode == 0
+    payload = json.loads(ok.stdout)
+    assert payload["status"] == "unchanged" and payload["file_path"] == target
+    assert payload["baselines"]["declared_source"] == "runs.report_json snapshot"
+    missing = run_cli("replay", "--run-id", run_id, "--table", "readings",
+                      "--file-path", "dt=1999-01-01/part.csv", "--db", db)
+    assert missing.returncode == 1 and "E_REPLAY_FILE_NOT_IN_REPORT" in missing.stderr
+    no_run = run_cli("replay", "--run-id", "no-such-run", "--table", "readings",
+                     "--file-path", target, "--db", db)
+    assert no_run.returncode == 1 and "E_REPLAY_RUN_NOT_FOUND" in no_run.stderr
