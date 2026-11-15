@@ -9,11 +9,16 @@ from lakeprune.config import AuditConfig, load_queries
 from lakeprune.manifest import load_lake
 from lakeprune.models import AuditResult, QuerySpecError
 from lakeprune.predicate import PredicateError, parse_predicate
-from lakeprune.prune import QueryPlan, build_query_plan
+from lakeprune.prune import QueryPlan, build_consistency_ledger, build_query_plan
 from lakeprune.report_html import write_html
 from lakeprune.report_json import write_json
 from lakeprune.report_markdown import write_markdown
-from lakeprune.risks import build_risks, exit_code_for_level, summarize_risks
+from lakeprune.risks import (
+    build_consistency_section,
+    build_risks,
+    exit_code_for_level,
+    summarize_risks,
+)
 from lakeprune.stats_audit import StatsAuditResult, audit_stats
 from lakeprune.storage import new_run_id, record_run
 
@@ -23,6 +28,7 @@ def build_report(
     audit: StatsAuditResult,
     risks: list[Any],
     fingerprint: str,
+    consistency: dict[str, Any],
 ) -> dict[str, Any]:
     risk_summary = summarize_risks(risks)
     table_summaries = [manifests[name].to_summary() for name in sorted(manifests)]
@@ -49,6 +55,7 @@ def build_report(
             "checks": [check.to_dict() for check in audit.checks],
         },
         "queries": [plan.to_dict() for plan in plans],
+        "consistency": consistency,
         "risks": [risk.to_dict() for risk in risks],
         "summary": summary,
     }
@@ -80,7 +87,8 @@ def run_audit(
     all_risks = build_risks(manifest_issues, audit, plans)
     effective_fail_on = fail_on if fail_on is not None else config.fail_on
     exit_code = exit_code_for_level(effective_fail_on, all_risks)
-    report = build_report(manifests, plans, audit, all_risks, fingerprint)
+    consistency = build_consistency_section(plans, build_consistency_ledger(plans))
+    report = build_report(manifests, plans, audit, all_risks, fingerprint, consistency)
     run_id = new_run_id()
     out_dir = Path(report_dir) if report_dir is not None else config.reports_dir
     json_path = out_dir / "report.json"

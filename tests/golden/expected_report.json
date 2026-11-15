@@ -1,4 +1,306 @@
 {
+  "consistency": {
+    "conflicts": [],
+    "files": [
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_events_battery",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "table": "events"
+      },
+      {
+        "observations": [
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_events_battery",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "battery_pct"
+            ]
+          }
+        ],
+        "path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "table": "events"
+      },
+      {
+        "observations": [
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_events_battery",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "battery_pct"
+            ]
+          }
+        ],
+        "path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "table": "events"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_events_battery",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "table": "events"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_window",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_window",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "value"
+            ]
+          },
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_window",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "value"
+            ]
+          }
+        ],
+        "path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "humidity"
+            ]
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_window",
+            "stats_decision": "must_match",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-02/region=r2/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_window",
+            "stats_decision": "must_match",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": false,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_hot_day",
+            "stats_decision": "must_not_match",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_null_humidity",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": false,
+            "partition_decision": "pruned",
+            "query_id": "q_readings_upper_region",
+            "stats_decision": "skipped_partition",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_readings_window",
+            "stats_decision": "must_match",
+            "untrusted_columns": []
+          }
+        ],
+        "path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "table": "readings"
+      },
+      {
+        "observations": [
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_stations_active",
+            "stats_decision": "maybe_match",
+            "untrusted_columns": []
+          },
+          {
+            "kept": true,
+            "partition_decision": "undetermined",
+            "query_id": "q_stations_notes",
+            "stats_decision": "unknown",
+            "untrusted_columns": [
+              "notes"
+            ]
+          }
+        ],
+        "path": "data.jsonl",
+        "table": "stations"
+      }
+    ],
+    "hints": [],
+    "summary": {
+      "conflicts": 0,
+      "files": 11,
+      "files_with_conflicts": 0,
+      "files_with_hints": 0,
+      "hints": 0,
+      "queries": 7
+    }
+  },
   "manifest_fingerprint": "40b843058f6a0987abc1687e43c8304eca473aac141d3526f0638c94bfff6563",
   "manifests": [
     {

@@ -157,6 +157,63 @@ def iter_leaves(expr: Expr) -> Iterable[Expr]:
     elif isinstance(expr, Not):
         yield from iter_leaves(expr.child)
 
+_COMPLEMENT_OPS = {"=": "!=", "!=": "=", "<": ">=", ">=": "<", ">": "<=", "<=": ">"}
+
+def _split_not(expr: Expr) -> tuple[Expr, bool]:
+    return (expr.child, True) if isinstance(expr, Not) else (expr, False)
+
+def predicate_leaves(expr: Expr) -> tuple[Expr, ...]:
+    """Leaves of a predicate tree, preserving NOT wrappers (unlike iter_leaves)."""
+    if isinstance(expr, (And, Or)):
+        leaves: list[Expr] = []
+        for child in expr.children:
+            leaves.extend(predicate_leaves(child))
+        return tuple(leaves)
+    return (expr,)
+
+def leaf_column(expr: Expr) -> str | None:
+    """Column referenced by a (possibly NOT-wrapped) leaf, if determinable."""
+    inner, _ = _split_not(expr)
+    return getattr(inner, "column", None)
+
+def are_complementary(left: Expr, right: Expr) -> bool:
+    """True when two leaf predicates on one column are logical complements."""
+    left_inner, left_negated = _split_not(left)
+    right_inner, right_negated = _split_not(right)
+    if left_negated != right_negated:
+        return left_inner == right_inner
+    if left_negated:
+        return are_complementary(left_inner, right_inner)
+    if isinstance(left_inner, Comparison) and isinstance(right_inner, Comparison):
+        return (
+            left_inner.column == right_inner.column
+            and left_inner.literal == right_inner.literal
+            and _COMPLEMENT_OPS.get(left_inner.op) == right_inner.op
+        )
+    if isinstance(left_inner, IsNull) and isinstance(right_inner, IsNull):
+        return left_inner.column == right_inner.column and left_inner.negated != right_inner.negated
+    return False
+
+def complementary_pairs(left: Expr, right: Expr) -> tuple[tuple[str, Expr, Expr], ...]:
+    """One representative complementary leaf pair per shared column, stable order."""
+    candidates: list[tuple[str, str, str, Expr, Expr]] = []
+    for left_leaf in predicate_leaves(left):
+        column = leaf_column(left_leaf)
+        if column is None:
+            continue
+        for right_leaf in predicate_leaves(right):
+            if column != leaf_column(right_leaf):
+                continue
+            if are_complementary(left_leaf, right_leaf):
+                candidates.append(
+                    (column, left_leaf.render(), right_leaf.render(), left_leaf, right_leaf)
+                )
+    candidates.sort(key=lambda item: (item[0], item[1], item[2]))
+    chosen: dict[str, tuple[Expr, Expr]] = {}
+    for column, _, _, left_leaf, right_leaf in candidates:
+        chosen.setdefault(column, (left_leaf, right_leaf))
+    return tuple((column, *chosen[column]) for column in sorted(chosen))
+
 @dataclass(frozen=True)
 class Evaluation:
     values: TruthSet

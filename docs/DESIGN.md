@@ -42,9 +42,9 @@ config.py ──► manifest.py ──► partition.py
 | `predicate_ast.py` | AST 节点、稳定渲染、三值逻辑组合、叶节点遍历和 AST JSON 序列化 |
 | `stats.py` | 校验声明统计，基于 min/max/null_count 做保守文件级决定；分区列使用精确分区值 |
 | `stats_audit.py` | 重新读取 CSV/JSONL，重算统计，校验类型、大小、哈希、行数，输出可信度与 untrusted map |
-| `prune.py` | 组合分区阶段与统计阶段，构建可解释的 QueryPlan/FilePlan 和误裁剪候选 |
-| `risks.py` | 八类风险的生成、稳定去重排序、级别统计和退出码 gate |
-| `runner.py` | 端到端编排：加载、复核、裁剪、风险、报告、SQLite 持久化 |
+| `prune.py` | 组合分区阶段与统计阶段，构建可解释的 QueryPlan/FilePlan、误裁剪候选和跨查询一致性账本 |
+| `risks.py` | 八类风险的生成、稳定去重排序、级别统计、退出码 gate，以及账本分歧的冲突/提示分类 |
+| `runner.py` | 端到端编排：加载、复核、裁剪、风险、一致性段、报告、SQLite 持久化 |
 | `storage.py` | SQLite schema、运行记录、查询计划/裁剪结果/风险/统计检查的读写 |
 | `report_json.py` | 规范 JSON 渲染、深度差异和 golden 比较 |
 | `report_markdown.py` | 确定性 Markdown 报告 |
@@ -62,6 +62,7 @@ config.py ──► manifest.py ──► partition.py
 5. **文件裁剪**：对未分区裁剪的文件使用声明统计求值；不可信、缺失或无效统计返回 unknown。分区列始终使用精确分区值，不用文件统计。
 6. **误裁剪证据**：若某文件因不可信统计被保留，但盲信声明统计会得到 `must_not_match`，则标记 `would_declared_prune` 并生成 `MIS_PRUNE_RISK`。
 7. **报告与台账**：报告只包含确定性内容（无 run ID、无时间戳）；运行时间和 run ID 仅进入 SQLite。JSON/Markdown 字节稳定，HTML 结构稳定。
+8. **跨查询一致性**：`consistency` 段按（表、文件路径）聚合本次运行所有查询的分区决策与统计决策；`skipped_partition` 表示该查询未做统计决策（分区裁剪），与 `unknown` 明确区分。仅当两条查询对同一列的谓词互为补集、且在同一文件上分别得到 `must_match` 与 `must_not_match` 时记为真冲突；分区键取值差异造成的保留/裁剪不算冲突；涉及 `unknown` 或不可信统计的分歧一律降级为提示。冲突分组与建议措辞由稳定输入生成，可 golden 对比。
 
 ## 确定性与排序
 

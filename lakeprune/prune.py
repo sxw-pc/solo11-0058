@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 from lakeprune.models import FileEntry, QuerySpec, TableManifest
 from lakeprune.partition import evaluate_partition, partition_label
@@ -14,6 +14,8 @@ from lakeprune.stats import (
     declared_stats_decision,
     evaluate_file,
 )
+
+SKIPPED_PARTITION = "skipped_partition"
 
 @dataclass(frozen=True)
 class FilePlan:
@@ -152,7 +154,7 @@ def build_query_plan(
         "must_not_match": 0,
         "maybe_match": 0,
         "unknown": 0,
-        "skipped_partition": 0,
+        SKIPPED_PARTITION: 0,
     }
     partition_pruned_files = 0
     stats_pruned_files = 0
@@ -166,14 +168,14 @@ def build_query_plan(
         )
         if partition_result.decision == "pruned":
             partition_pruned_files += 1
-            stats_counts["skipped_partition"] += 1
+            stats_counts[SKIPPED_PARTITION] += 1
             file_plans.append(
                 FilePlan(
                     entry.path,
                     dict(entry.partition),
                     "pruned",
                     partition_result.reasons,
-                    "skipped_partition",
+                    SKIPPED_PARTITION,
                     (),
                     False,
                     entry.size_bytes,
@@ -239,3 +241,55 @@ def build_query_plan(
         estimated_scan_bytes=estimated_scan_bytes,
         stats_counts=stats_counts,
     )
+
+@dataclass(frozen=True)
+class FileObservation:
+    """One query's partition and statistics decisions on a single file."""
+
+    query_id: str
+    partition_decision: str
+    stats_decision: str
+    kept: bool
+    untrusted_columns: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "query_id": self.query_id,
+            "partition_decision": self.partition_decision,
+            "stats_decision": self.stats_decision,
+            "kept": self.kept,
+            "untrusted_columns": list(self.untrusted_columns),
+        }
+
+@dataclass(frozen=True)
+class FileLedger:
+    """Cross-query ledger entry: every query's decisions on one file."""
+
+    table: str
+    path: str
+    observations: tuple[FileObservation, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"table": self.table, "path": self.path,
+                "observations": [item.to_dict() for item in self.observations]}
+
+def build_consistency_ledger(plans: Iterable[QueryPlan]) -> tuple[FileLedger, ...]:
+    """Aggregate all queries' decisions per file, ordered by table, path, query.
+
+    A ``skipped_partition`` stats decision means the query made no statistics
+    decision on the file (partition pruning), which is distinct from ``unknown``.
+    """
+    grouped: dict[tuple[str, str], list[FileObservation]] = {}
+    for plan in plans:
+        for item in plan.files:
+            observation = FileObservation(
+                plan.query.query_id, item.partition_decision, item.stats_decision,
+                item.kept, item.untrusted_columns,
+            )
+            grouped.setdefault((plan.query.table, item.path), []).append(observation)
+    entries = [
+        FileLedger(table, path, tuple(sorted(observations, key=lambda obs: obs.query_id)))
+        for (table, path), observations in grouped.items()
+    ]
+    entries.sort(key=lambda entry: (entry.table, entry.path))
+    return tuple(entries)
