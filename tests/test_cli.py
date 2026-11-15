@@ -47,6 +47,29 @@ def test_audit_gate_report_export_and_golden(tmp_path: Path):
     expected = PROJECT_ROOT / "tests" / "golden" / "expected_report.json"
     assert run_cli("golden", "--expected", str(expected), "--actual", actual).returncode == 0
 
+def test_golden_cli_accepts_reordering_but_rejects_checks_and_duplicate_paths(tmp_path: Path):
+    expected = Path(json.loads(run_cli("demo", "--out", str(tmp_path / "demo")).stdout)["json_report"])
+    report = json.loads(expected.read_text(encoding="utf-8"))
+    report["queries"][0:2] = reversed(report["queries"][0:2])
+    report["queries"][0]["files"][0:2] = reversed(report["queries"][0]["files"][0:2])
+
+    def golden(name: str) -> subprocess.CompletedProcess:
+        path = tmp_path / f"{name}.json"
+        path.write_text(json.dumps(report), encoding="utf-8")
+        return run_cli("golden", "--expected", str(expected), "--actual", str(path))
+
+    accepted = golden("reordered")
+    assert accepted.returncode == 0 and "golden: OK" in accepted.stdout
+    assert "order differs" in accepted.stdout
+    report["stats_audit"]["checks"][0:2] = reversed(report["stats_audit"]["checks"][0:2])
+    rejected = golden("checks")
+    assert rejected.returncode == 1 and "golden: MISMATCH" in rejected.stdout
+    report = json.loads(expected.read_text(encoding="utf-8"))
+    files = report["queries"][0]["files"]
+    files[1]["path"] = files[0]["path"]
+    rejected = golden("duplicated")
+    assert rejected.returncode == 1 and "duplicate primary key path=" in rejected.stdout
+
 def test_report_missing_run_returns_nonzero():
     completed = run_cli("report", "--run-id", "missing", "--db", "runtime/no-such.db")
     assert completed.returncode == 1 and "run not found" in completed.stderr

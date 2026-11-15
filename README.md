@@ -180,7 +180,7 @@ queries:
 
 JSON 报告包含 `manifest_fingerprint`、表摘要、每个查询的谓词 AST/渲染文本、文件级分区与统计决定、原因、统计快照、风险列表和统计复核检查。Markdown/HTML 同样给出表清单、查询计划、文件决定、风险和非 OK 统计检查。
 
-`golden` 对 JSON 做深度、稳定比较：
+`golden` 按业务身份比较 JSON：`queries` 以 `query_id`、`risks` 以 `risk_id`、每个查询计划的 `files` 以 `path` 配对后逐字段比较，因此这些数组内部换序只产生 `~` 开头的 order-only 提示，不影响 OK 结论；任一侧出现重复主键则判为 MISMATCH。其余列表（如 `stats_audit.checks` 以及 `evidence`、`declared`、`actual` 内嵌列表）保持原有序列语义，换序即差异。
 
 ```bash
 python -m lakeprune golden \

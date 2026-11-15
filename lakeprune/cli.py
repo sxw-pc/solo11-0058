@@ -11,7 +11,7 @@ from lakeprune.config import load_config
 from lakeprune.demo_data import prepare_workspace, write_lake
 from lakeprune.models import LakePruneError
 from lakeprune.report_html import render_html
-from lakeprune.report_json import compare_golden, render_json
+from lakeprune.report_json import compare_golden_detailed, render_json
 from lakeprune.report_markdown import render_markdown
 from lakeprune.runner import collect_stats, run_audit
 from lakeprune.server import serve
@@ -113,14 +113,13 @@ def _cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 def _cmd_golden(args: argparse.Namespace) -> int:
-    ok, differences = compare_golden(args.expected, args.actual)
-    if ok:
-        print("golden: OK")
-        return 0
-    print(f"golden: MISMATCH ({len(differences)} difference lines)")
-    for line in differences:
-        print(line)
-    return 1
+    ok, differences, order_notes = compare_golden_detailed(args.expected, args.actual)
+    lines = differences + ([f"order-only notices ({len(order_notes)}):"]
+                           if not ok and order_notes else []) + order_notes
+    print("golden: OK" if ok else f"golden: MISMATCH ({len(differences)} difference lines)")
+    if lines:
+        print("\n".join(lines))
+    return 0 if ok else 1
 
 def _cmd_serve(args: argparse.Namespace) -> int:
     serve(args.db, args.port)
