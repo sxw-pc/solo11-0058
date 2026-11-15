@@ -178,7 +178,7 @@ queries:
 - `report.html`：自包含 HTML，内联 CSS，无 CDN、无脚本、无外部资源；
 - SQLite 台账：`runs`、`queries`、`prune_results`、`risks`、`stats_checks`。
 
-JSON 报告包含 `manifest_fingerprint`、表摘要、每个查询的谓词 AST/渲染文本、文件级分区与统计决定、原因、统计快照、风险列表和统计复核检查。Markdown/HTML 同样给出表清单、查询计划、文件决定、风险和非 OK 统计检查。
+JSON 报告包含 `manifest_fingerprint`、表摘要、每个查询的谓词 AST/渲染文本、文件级分区与统计决定、原因、统计快照、风险列表和统计复核检查。`drift_propagation` 段逐叶子说明 TYPE_DRIFT 列是否传导到各 （查询， 文件） 的裁剪决定（命中叶子、NOT/OR 降级分支、另一侧是否受影响、保留是否仅因漂移降级为 `unknown`），规则见 `docs/RISKS.md`。Markdown/HTML 同样给出表清单、查询计划、文件决定、风险和非 OK 统计检查。
 
 `golden` 对 JSON 做深度、稳定比较：
 

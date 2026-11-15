@@ -1,0 +1,4 @@
+{"active": true, "elevation_m": 120, "notes": "ridge site", "opened_on": "2021-04-01", "station_id": "station-demo-01"}
+{"active": false, "elevation_m": 88, "notes": null, "opened_on": "2022-09-15", "station_id": "station-demo-02"}
+{"active": true, "elevation_m": 210, "notes": "coastal backup", "opened_on": "2023-01-20", "station_id": "station-demo-03"}
+{"active": true, "elevation_m": 45, "notes": null, "opened_on": "2023-11-02", "station_id": "station-demo-04"}

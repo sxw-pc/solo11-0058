@@ -1,4 +1,77 @@
 {
+  "drift_propagation": {
+    "records": [
+      {
+        "asymmetric_nodes": [],
+        "conclusion": {
+          "pruning_trustworthy": true,
+          "retained_only_as_unknown": false
+        },
+        "decisions": {
+          "changed_by_drift": false,
+          "effective": "unknown",
+          "effective_values": [
+            null,
+            false,
+            true
+          ],
+          "retained": true,
+          "trusted_values": [
+            false,
+            true
+          ],
+          "trusted_without_drift": "maybe_match"
+        },
+        "drift_columns": [
+          "battery_pct"
+        ],
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "leaves": [
+          {
+            "branches": [
+              {
+                "fragment": "(status IN ('ok', 'retry') AND battery_pct >= 20)",
+                "index": 1,
+                "operator": "and",
+                "sibling_affected": false,
+                "sibling_fragments": [
+                  "status IN ('ok', 'retry')"
+                ],
+                "side": "right"
+              }
+            ],
+            "column": "battery_pct",
+            "effective_values": [
+              null,
+              false,
+              true
+            ],
+            "fragment": "battery_pct >= 20",
+            "kind": "comparison",
+            "not_evidence": null,
+            "trusted_values": [
+              false,
+              true
+            ],
+            "under_not": false
+          }
+        ],
+        "non_propagated_columns": [],
+        "propagated_columns": [
+          "battery_pct"
+        ],
+        "query_id": "q_events_battery",
+        "table": "events"
+      }
+    ],
+    "summary": {
+      "files_affected": 1,
+      "propagated_columns": 1,
+      "queries_affected": 1,
+      "records": 1,
+      "untrustworthy_retentions": 0
+    }
+  },
   "manifest_fingerprint": "40b843058f6a0987abc1687e43c8304eca473aac141d3526f0638c94bfff6563",
   "manifests": [
     {
@@ -53,6 +126,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -86,6 +160,7 @@
         },
         {
           "declared_stats_decision": "unknown",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-01",
@@ -114,6 +189,66 @@
         },
         {
           "declared_stats_decision": "maybe_match",
+          "drift_propagation": {
+            "asymmetric_nodes": [],
+            "conclusion": {
+              "pruning_trustworthy": true,
+              "retained_only_as_unknown": false
+            },
+            "decisions": {
+              "changed_by_drift": false,
+              "effective": "unknown",
+              "effective_values": [
+                null,
+                false,
+                true
+              ],
+              "retained": true,
+              "trusted_values": [
+                false,
+                true
+              ],
+              "trusted_without_drift": "maybe_match"
+            },
+            "drift_columns": [
+              "battery_pct"
+            ],
+            "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+            "leaves": [
+              {
+                "branches": [
+                  {
+                    "fragment": "(status IN ('ok', 'retry') AND battery_pct >= 20)",
+                    "index": 1,
+                    "operator": "and",
+                    "sibling_affected": false,
+                    "sibling_fragments": [
+                      "status IN ('ok', 'retry')"
+                    ],
+                    "side": "right"
+                  }
+                ],
+                "column": "battery_pct",
+                "effective_values": [
+                  null,
+                  false,
+                  true
+                ],
+                "fragment": "battery_pct >= 20",
+                "kind": "comparison",
+                "not_evidence": null,
+                "trusted_values": [
+                  false,
+                  true
+                ],
+                "under_not": false
+              }
+            ],
+            "non_propagated_columns": [],
+            "propagated_columns": [
+              "battery_pct"
+            ]
+          },
           "kept": true,
           "partition": {
             "dt": "2024-01-02",
@@ -147,6 +282,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -260,6 +396,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -288,6 +425,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -316,6 +454,7 @@
         },
         {
           "declared_stats_decision": "must_not_match",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-02",
@@ -344,6 +483,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-02",
@@ -372,6 +512,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -400,6 +541,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -501,6 +643,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -529,6 +672,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -557,6 +701,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-02",
@@ -585,6 +730,7 @@
         },
         {
           "declared_stats_decision": "unknown",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-02",
@@ -608,6 +754,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -636,6 +783,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -731,6 +879,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -753,6 +902,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -775,6 +925,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-02",
@@ -797,6 +948,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-02",
@@ -819,6 +971,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -841,6 +994,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-03",
@@ -920,6 +1074,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -948,6 +1103,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": false,
           "partition": {
             "dt": "2024-01-01",
@@ -976,6 +1132,7 @@
         },
         {
           "declared_stats_decision": "maybe_match",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-02",
@@ -1004,6 +1161,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-02",
@@ -1030,6 +1188,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-03",
@@ -1056,6 +1215,7 @@
         },
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": true,
           "partition": {
             "dt": "2024-01-03",
@@ -1159,6 +1319,7 @@
       "files": [
         {
           "declared_stats_decision": "",
+          "drift_propagation": null,
           "kept": true,
           "partition": {},
           "partition_decision": "undetermined",
@@ -1237,6 +1398,7 @@
       "files": [
         {
           "declared_stats_decision": "unknown",
+          "drift_propagation": null,
           "kept": true,
           "partition": {},
           "partition_decision": "undetermined",

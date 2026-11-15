@@ -1,0 +1,174 @@
+{
+  "columns": {
+    "battery_pct": "int",
+    "dt": "date",
+    "event_id": "string",
+    "recorded_at": "datetime",
+    "region": "string",
+    "status": "string"
+  },
+  "files": [
+    {
+      "columns": {
+        "battery_pct": {
+          "max": 15,
+          "min": 10,
+          "null_count": 0,
+          "type": "int"
+        },
+        "event_id": {
+          "max": "evt-demo-1002",
+          "min": "evt-demo-1001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "recorded_at": {
+          "max": "2024-01-01T06:00:00",
+          "min": "2024-01-01T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "status": {
+          "max": "ok",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-01",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-01/region=r1/part-0001.csv",
+      "row_count": 2,
+      "sha256": "f31da4d1952d457a30ada7663584b3dcffc2c8112f44748df633f50b912c109d",
+      "size_bytes": 134
+    },
+    {
+      "columns": {
+        "event_id": {
+          "max": "evt-demo-2002",
+          "min": "evt-demo-2001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "recorded_at": {
+          "max": "2024-01-01T08:00:00",
+          "min": "2024-01-01T07:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "status": {
+          "max": "retry",
+          "min": "retry",
+          "null_count": 0,
+          "type": "string"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-01",
+        "region": "r2"
+      },
+      "path": "dt=2024-01-01/region=r2/part-0001.csv",
+      "row_count": 2,
+      "sha256": "d0e656454c789ed2a01d452d1b3b91d979cd4aa6cbeae41f0572081e673fde6a",
+      "size_bytes": 140
+    },
+    {
+      "columns": {
+        "battery_pct": {
+          "max": 88,
+          "min": 18,
+          "null_count": 0,
+          "type": "int"
+        },
+        "event_id": {
+          "max": "evt-demo-3003",
+          "min": "evt-demo-3001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "recorded_at": {
+          "max": "2024-01-02T07:00:00",
+          "min": "2024-01-02T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "status": {
+          "max": "retry",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-02",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-02/region=r1/part-0001.csv",
+      "row_count": 3,
+      "sha256": "12287d197c2392aea263c60501c9c06cddf76476372ab3246fd36410adb577fc",
+      "size_bytes": 182
+    },
+    {
+      "columns": {
+        "battery_pct": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "int"
+        },
+        "event_id": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        },
+        "recorded_at": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "status": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-03",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-03/region=r1/part-0001.csv",
+      "row_count": 0,
+      "sha256": "780bfc127d809feeb4abed36dfea50184996ce33556a5d209ef002a768580b18",
+      "size_bytes": 50
+    }
+  ],
+  "format": "csv",
+  "partition_columns": [
+    "dt",
+    "region"
+  ],
+  "partitions": [
+    {
+      "dt": "2024-01-01",
+      "region": "r1"
+    },
+    {
+      "dt": "2024-01-01",
+      "region": "r2"
+    },
+    {
+      "dt": "2024-01-02",
+      "region": "r1"
+    },
+    {
+      "dt": "2024-01-03",
+      "region": "r1"
+    }
+  ],
+  "table": "events"
+}

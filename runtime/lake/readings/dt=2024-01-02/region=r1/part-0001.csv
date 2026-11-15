@@ -1,0 +1,4 @@
+station_id,observed_at,value,humidity,dt,region
+station-demo-01,2024-01-02T00:10:00,42.0,55.0,,
+station-demo-01,2024-01-02T01:10:00,15.0,45.0,,
+station-demo-02,2024-01-02T02:10:00,12.2,44.0,,

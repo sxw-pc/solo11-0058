@@ -15,6 +15,7 @@ from lakeprune.predicate_ast import (
     Expr,
     InList,
     IsNull,
+    LeafEvaluator,
     evaluate_tree,
 )
 from lakeprune.utils import TYPE_NAMES, canonical_scalar
@@ -133,6 +134,38 @@ def _leaf_stats(
     reasons = (node.render(),) if True not in values else ()
     return Evaluation(frozenset(values), reasons)
 
+def make_leaf_evaluator(
+    file_entry: FileEntry,
+    column_types: Mapping[str, str],
+    untrusted_columns: set[str],
+    partition_columns: tuple[str, ...],
+    partition_values: Mapping[str, object],
+    unknown: set[str] | None = None,
+) -> LeafEvaluator:
+    """Build the per-leaf evaluator used by ``evaluate_file``; shared with drift tracing."""
+    def leaf(node: Expr) -> Evaluation:
+        column = getattr(node, "column", None)
+        if column is None or column not in column_types:
+            if unknown is not None:
+                unknown.add(str(column))
+            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
+        if column in partition_columns:
+            return exact_leaf_evaluation(node, partition_values, partition_columns)
+        if column in untrusted_columns:
+            if unknown is not None:
+                unknown.add(column)
+            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
+        stats = file_entry.columns.get(column)
+        if stats is None:
+            if unknown is not None:
+                unknown.add(column)
+            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
+        valid, _ = validate_stats(stats, column_types[column], file_entry.row_count)
+        if not valid and unknown is not None:
+            unknown.add(column)
+        return _leaf_stats(node, stats, file_entry.row_count, column_types[column])
+    return leaf
+
 def evaluate_file(
     expression: Expr,
     file_entry: FileEntry,
@@ -142,31 +175,13 @@ def evaluate_file(
     partition_values: Mapping[str, object] | None = None,
 ) -> StatsOutcome:
     """Classify one data file conservatively; untrusted stats become unknown."""
-    untrusted = untrusted_columns or set()
-    unknown: set[str] = set()
-    partition_values = partition_values or {}
-
-    def leaf(node: Expr) -> Evaluation:
-        column = getattr(node, "column", None)
-        if column is None or column not in column_types:
-            unknown.add(str(column))
-            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
-        if column in partition_columns:
-            return exact_leaf_evaluation(node, partition_values, partition_columns)
-        if column in untrusted:
-            unknown.add(column)
-            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
-        stats = file_entry.columns.get(column)
-        if stats is None:
-            unknown.add(column)
-            return Evaluation(ALL_TRUTH, (node.render(),), unknown_used=True)
-        valid, _ = validate_stats(stats, column_types[column], file_entry.row_count)
-        if not valid:
-            unknown.add(column)
-        return _leaf_stats(node, stats, file_entry.row_count, column_types[column])
-
     if file_entry.row_count == 0:
         return StatsOutcome(MUST_NOT_MATCH, ("file has zero rows",), (), (False,))
+    unknown: set[str] = set()
+    leaf = make_leaf_evaluator(
+        file_entry, column_types, untrusted_columns or set(),
+        partition_columns, partition_values or {}, unknown,
+    )
     evaluation = evaluate_tree(expression, leaf)
     if True not in evaluation.values:
         decision = MUST_NOT_MATCH

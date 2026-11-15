@@ -115,6 +115,40 @@ def from_query_plan(plan: QueryPlan) -> list[Risk]:
         ))
     return result
 
+def drift_column_map(
+    manifest_issues: Iterable[ManifestIssue],
+    audit: StatsAuditResult,
+) -> dict[str, dict[str, set[str]]]:
+    """Collect TYPE_DRIFT columns per (table, file) from manifest issues and the stats audit."""
+    result: dict[str, dict[str, set[str]]] = {}
+    for issue in manifest_issues:
+        if issue.code == "TYPE_DRIFT" and issue.column:
+            result.setdefault(issue.table, {}).setdefault(issue.file_path, set()).add(issue.column)
+    for check in audit.checks:
+        if check.status == STATUS_DRIFT:
+            result.setdefault(check.table, {}).setdefault(check.file_path, set()).add(check.column)
+    return result
+
+def collect_drift_propagation(plans: Iterable[QueryPlan]) -> dict[str, Any]:
+    """Gather per-(query, file) drift propagation records into a stable report section."""
+    records = [
+        {"query_id": plan.query.query_id, "table": plan.query.table, **record}
+        for plan in plans
+        for item in plan.files
+        if (record := item.drift_propagation) is not None
+    ]
+    records.sort(key=lambda item: (item["query_id"], item["table"], item["file_path"]))
+    summary = {
+        "records": len(records),
+        "queries_affected": len({item["query_id"] for item in records}),
+        "files_affected": len({(item["table"], item["file_path"]) for item in records}),
+        "propagated_columns": sum(len(item["propagated_columns"]) for item in records),
+        "untrustworthy_retentions": sum(
+            1 for item in records if not item["conclusion"]["pruning_trustworthy"]
+        ),
+    }
+    return {"summary": summary, "records": records}
+
 def build_risks(
     manifest_issues: Iterable[ManifestIssue],
     audit: StatsAuditResult,

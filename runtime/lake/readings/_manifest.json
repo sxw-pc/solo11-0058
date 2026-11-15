@@ -1,0 +1,254 @@
+{
+  "columns": {
+    "dt": "date",
+    "humidity": "float",
+    "observed_at": "datetime",
+    "region": "string",
+    "station_id": "string",
+    "value": "float"
+  },
+  "files": [
+    {
+      "columns": {
+        "humidity": {
+          "max": 42.0,
+          "min": 40.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "observed_at": {
+          "max": "2024-01-01T02:10:00",
+          "min": "2024-01-01T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 12.0,
+          "min": 10.5,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-01",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-01/region=r1/part-0001.csv",
+      "row_count": 3,
+      "sha256": "2ba63e78e852444170bbb0d2d6f28d090f42467d81f3cecd1119a48018076831",
+      "size_bytes": 192
+    },
+    {
+      "columns": {
+        "humidity": {
+          "max": 38.0,
+          "min": 38.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "observed_at": {
+          "max": "2024-01-01T04:10:00",
+          "min": "2024-01-01T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 10.2,
+          "min": 9.5,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-01",
+        "region": "r2"
+      },
+      "path": "dt=2024-01-01/region=r2/part-0001.csv",
+      "row_count": 2,
+      "sha256": "2d4130667050aecdcb1a8638767f597be573f4119577b549c7e9986b194af90a",
+      "size_bytes": 139
+    },
+    {
+      "columns": {
+        "humidity": {
+          "max": 55.0,
+          "min": 44.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "observed_at": {
+          "max": "2024-01-02T02:10:00",
+          "min": "2024-01-02T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 39.0,
+          "min": 12.2,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-02",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-02/region=r1/part-0001.csv",
+      "row_count": 3,
+      "sha256": "9fd5715dfb8cb2151264e1694eab31a471b256deaa888edfe24861dcb1e14e56",
+      "size_bytes": 192
+    },
+    {
+      "columns": {
+        "observed_at": {
+          "max": "2024-01-02T04:10:00",
+          "min": "2024-01-02T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 31.5,
+          "min": 30.0,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-02",
+        "region": "r2"
+      },
+      "path": "dt=2024-01-02/region=r2/part-0001.csv",
+      "row_count": 2,
+      "sha256": "af29875d04e54c8ad221a960a9ee55b226c5c2eb7a6a2bce5fd1ed8e0f5db8bd",
+      "size_bytes": 140
+    },
+    {
+      "columns": {
+        "humidity": {
+          "max": 41.0,
+          "min": 39.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "observed_at": {
+          "max": "2024-01-03T04:10:00",
+          "min": "2024-01-03T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-04",
+          "min": "station-demo-04",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 19.2,
+          "min": 18.0,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-03",
+        "region": null
+      },
+      "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+      "row_count": 2,
+      "sha256": "dbfa1c68b52f3552fcfd77e6409343be3c0aaa54b23a485e90041743bf56fa3d",
+      "size_bytes": 144
+    },
+    {
+      "columns": {
+        "humidity": {
+          "max": 51.0,
+          "min": 47.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "observed_at": {
+          "max": "2024-01-03T02:10:00",
+          "min": "2024-01-03T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "station_id": {
+          "max": "station-demo-03",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "value": {
+          "max": 25.0,
+          "min": 20.0,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "partition": {
+        "dt": "2024-01-03",
+        "region": "r1"
+      },
+      "path": "dt=2024-01-03/region=r1/part-0001.csv",
+      "row_count": 3,
+      "sha256": "ae1a17a4441546fe51cb13a3a77e8759f1b35ff20d751e65367ca411d495a346",
+      "size_bytes": 188
+    }
+  ],
+  "format": "csv",
+  "partition_columns": [
+    "dt",
+    "region"
+  ],
+  "partitions": [
+    {
+      "dt": "2024-01-01",
+      "region": "r1"
+    },
+    {
+      "dt": "2024-01-01",
+      "region": "r2"
+    },
+    {
+      "dt": "2024-01-02",
+      "region": "r1"
+    },
+    {
+      "dt": "2024-01-02",
+      "region": "r2"
+    },
+    {
+      "dt": "2024-01-03",
+      "region": null
+    },
+    {
+      "dt": "2024-01-03",
+      "region": "r1"
+    }
+  ],
+  "table": "readings"
+}

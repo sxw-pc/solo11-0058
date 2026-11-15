@@ -1,0 +1,2688 @@
+{
+  "drift_propagation": {
+    "records": [
+      {
+        "asymmetric_nodes": [],
+        "conclusion": {
+          "pruning_trustworthy": true,
+          "retained_only_as_unknown": false
+        },
+        "decisions": {
+          "changed_by_drift": false,
+          "effective": "unknown",
+          "effective_values": [
+            null,
+            false,
+            true
+          ],
+          "retained": true,
+          "trusted_values": [
+            false,
+            true
+          ],
+          "trusted_without_drift": "maybe_match"
+        },
+        "drift_columns": [
+          "battery_pct"
+        ],
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "leaves": [
+          {
+            "branches": [
+              {
+                "fragment": "(status IN ('ok', 'retry') AND battery_pct >= 20)",
+                "index": 1,
+                "operator": "and",
+                "sibling_affected": false,
+                "sibling_fragments": [
+                  "status IN ('ok', 'retry')"
+                ],
+                "side": "right"
+              }
+            ],
+            "column": "battery_pct",
+            "effective_values": [
+              null,
+              false,
+              true
+            ],
+            "fragment": "battery_pct >= 20",
+            "kind": "comparison",
+            "not_evidence": null,
+            "trusted_values": [
+              false,
+              true
+            ],
+            "under_not": false
+          }
+        ],
+        "non_propagated_columns": [],
+        "propagated_columns": [
+          "battery_pct"
+        ],
+        "query_id": "q_events_battery",
+        "table": "events"
+      }
+    ],
+    "summary": {
+      "files_affected": 1,
+      "propagated_columns": 1,
+      "queries_affected": 1,
+      "records": 1,
+      "untrustworthy_retentions": 0
+    }
+  },
+  "manifest_fingerprint": "40b843058f6a0987abc1687e43c8304eca473aac141d3526f0638c94bfff6563",
+  "manifests": [
+    {
+      "file_count": 4,
+      "fingerprint": "b08d78a98516323080e31d22a757f86d5a1e27db0fde8f7a25965dc555c821b6",
+      "format": "csv",
+      "manifest_path": "events/_manifest.json",
+      "partition_columns": [
+        "dt",
+        "region"
+      ],
+      "partition_count": 4,
+      "row_count": 7,
+      "size_bytes": 506,
+      "table": "events"
+    },
+    {
+      "file_count": 6,
+      "fingerprint": "01b5b4bc1a4df9f34b628a954dac70585d906fc430e5a32e73f335efb464c36c",
+      "format": "csv",
+      "manifest_path": "readings/_manifest.json",
+      "partition_columns": [
+        "dt",
+        "region"
+      ],
+      "partition_count": 6,
+      "row_count": 15,
+      "size_bytes": 995,
+      "table": "readings"
+    },
+    {
+      "file_count": 1,
+      "fingerprint": "87e7f696cef0f100bf68c2ea98b3299caa4185ae2bec1a1a2bfad541c632c4be",
+      "format": "jsonl",
+      "manifest_path": "stations/_manifest.json",
+      "partition_columns": [],
+      "partition_count": 1,
+      "row_count": 4,
+      "size_bytes": 467,
+      "table": "stations"
+    }
+  ],
+  "project": "湖裁验台",
+  "queries": [
+    {
+      "description": "Find healthy or retrying events with enough battery.",
+      "expected_columns": [
+        "event_id",
+        "status",
+        "battery_pct"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 134,
+          "statistics": {
+            "battery_pct": {
+              "max": 15,
+              "min": 10,
+              "null_count": 0,
+              "type": "int"
+            },
+            "status": {
+              "max": "ok",
+              "min": "ok",
+              "null_count": 0,
+              "type": "string"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "battery_pct >= 20"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "unknown",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 140,
+          "statistics": {
+            "battery_pct": null,
+            "status": {
+              "max": "retry",
+              "min": "retry",
+              "null_count": 0,
+              "type": "string"
+            }
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [],
+          "untrusted_columns": [
+            "battery_pct"
+          ],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "maybe_match",
+          "drift_propagation": {
+            "asymmetric_nodes": [],
+            "conclusion": {
+              "pruning_trustworthy": true,
+              "retained_only_as_unknown": false
+            },
+            "decisions": {
+              "changed_by_drift": false,
+              "effective": "unknown",
+              "effective_values": [
+                null,
+                false,
+                true
+              ],
+              "retained": true,
+              "trusted_values": [
+                false,
+                true
+              ],
+              "trusted_without_drift": "maybe_match"
+            },
+            "drift_columns": [
+              "battery_pct"
+            ],
+            "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+            "leaves": [
+              {
+                "branches": [
+                  {
+                    "fragment": "(status IN ('ok', 'retry') AND battery_pct >= 20)",
+                    "index": 1,
+                    "operator": "and",
+                    "sibling_affected": false,
+                    "sibling_fragments": [
+                      "status IN ('ok', 'retry')"
+                    ],
+                    "side": "right"
+                  }
+                ],
+                "column": "battery_pct",
+                "effective_values": [
+                  null,
+                  false,
+                  true
+                ],
+                "fragment": "battery_pct >= 20",
+                "kind": "comparison",
+                "not_evidence": null,
+                "trusted_values": [
+                  false,
+                  true
+                ],
+                "under_not": false
+              }
+            ],
+            "non_propagated_columns": [],
+            "propagated_columns": [
+              "battery_pct"
+            ]
+          },
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 182,
+          "statistics": {
+            "battery_pct": {
+              "max": 88,
+              "min": 18,
+              "null_count": 0,
+              "type": "int"
+            },
+            "status": {
+              "max": "retry",
+              "min": "ok",
+              "null_count": 0,
+              "type": "string"
+            }
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [],
+          "untrusted_columns": [
+            "battery_pct"
+          ],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "row_count": 0,
+          "size_bytes": 50,
+          "statistics": {
+            "battery_pct": {
+              "max": null,
+              "min": null,
+              "null_count": 0,
+              "type": "int"
+            },
+            "status": {
+              "max": null,
+              "min": null,
+              "null_count": 0,
+              "type": "string"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "file has zero rows"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 0,
+        "total": 4,
+        "undetermined": 4
+      },
+      "predicate": {
+        "ast": {
+          "children": [
+            {
+              "column": "status",
+              "kind": "in",
+              "values": [
+                {
+                  "kind": "literal",
+                  "type": "string",
+                  "value": "ok"
+                },
+                {
+                  "kind": "literal",
+                  "type": "string",
+                  "value": "retry"
+                }
+              ]
+            },
+            {
+              "column": "battery_pct",
+              "kind": "comparison",
+              "literal": {
+                "kind": "literal",
+                "type": "int",
+                "value": 20
+              },
+              "op": ">="
+            }
+          ],
+          "kind": "and"
+        },
+        "referenced_columns": [
+          "battery_pct",
+          "status"
+        ],
+        "rendered": "(status IN ('ok', 'retry') AND battery_pct >= 20)"
+      },
+      "query_id": "q_events_battery",
+      "select": [
+        "event_id",
+        "status",
+        "battery_pct"
+      ],
+      "summary": {
+        "candidate_files": 2,
+        "estimated_scan_bytes": 322,
+        "full_scan": false,
+        "partition_candidate_files": 4,
+        "partition_pruned_files": 0,
+        "prune_ratio": 0.363636,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 0,
+          "must_not_match": 2,
+          "skipped_partition": 0,
+          "unknown": 2
+        },
+        "stats_pruned_files": 2,
+        "total_bytes": 506,
+        "total_files": 4
+      },
+      "table": "events",
+      "where": "status IN ('ok', 'retry') AND battery_pct >= 20"
+    },
+    {
+      "description": "Find hot readings from the latest two days.",
+      "expected_columns": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt >= '2024-01-02'"
+          ],
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 12.0,
+              "min": 10.5,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt >= '2024-01-02'"
+          ],
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 139,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 10.2,
+              "min": 9.5,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "must_not_match",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 39.0,
+              "min": 12.2,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [],
+          "untrusted_columns": [
+            "value"
+          ],
+          "would_declared_prune": true
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r2"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 140,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 31.5,
+              "min": 30.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "value > 40.0"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": null
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 144,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 19.2,
+              "min": 18.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "value > 40.0"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 188,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 25.0,
+              "min": 20.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "value > 40.0"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 2,
+        "total": 6,
+        "undetermined": 4
+      },
+      "predicate": {
+        "ast": {
+          "children": [
+            {
+              "column": "dt",
+              "kind": "comparison",
+              "literal": {
+                "kind": "literal",
+                "type": "date",
+                "value": "2024-01-02"
+              },
+              "op": ">="
+            },
+            {
+              "column": "value",
+              "kind": "comparison",
+              "literal": {
+                "kind": "literal",
+                "type": "float",
+                "value": 40.0
+              },
+              "op": ">"
+            }
+          ],
+          "kind": "and"
+        },
+        "referenced_columns": [
+          "dt",
+          "value"
+        ],
+        "rendered": "(dt >= '2024-01-02' AND value > 40.0)"
+      },
+      "query_id": "q_readings_hot_day",
+      "select": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "summary": {
+        "candidate_files": 1,
+        "estimated_scan_bytes": 192,
+        "full_scan": false,
+        "partition_candidate_files": 4,
+        "partition_pruned_files": 2,
+        "prune_ratio": 0.807035,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 0,
+          "must_not_match": 3,
+          "skipped_partition": 2,
+          "unknown": 1
+        },
+        "stats_pruned_files": 3,
+        "total_bytes": 995,
+        "total_files": 6
+      },
+      "table": "readings",
+      "where": "dt >= '2024-01-02' AND value > 40.0"
+    },
+    {
+      "description": "Find second-day readings with missing humidity.",
+      "expected_columns": [
+        "station_id",
+        "humidity"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt = '2024-01-02'"
+          ],
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "humidity": {
+              "max": 42.0,
+              "min": 40.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt = '2024-01-02'"
+          ],
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 139,
+          "statistics": {
+            "dt": null,
+            "humidity": {
+              "max": 38.0,
+              "min": 38.0,
+              "null_count": 1,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "humidity": {
+              "max": 55.0,
+              "min": 44.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_not_match",
+          "stats_reasons": [
+            "humidity IS NULL"
+          ],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "unknown",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r2"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 140,
+          "statistics": {
+            "dt": null,
+            "humidity": null
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [],
+          "untrusted_columns": [
+            "humidity"
+          ],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": null
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt = '2024-01-02'"
+          ],
+          "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 144,
+          "statistics": {
+            "dt": null,
+            "humidity": {
+              "max": 41.0,
+              "min": 39.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt = '2024-01-02'"
+          ],
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 188,
+          "statistics": {
+            "dt": null,
+            "humidity": {
+              "max": 51.0,
+              "min": 47.0,
+              "null_count": 1,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 4,
+        "total": 6,
+        "undetermined": 2
+      },
+      "predicate": {
+        "ast": {
+          "children": [
+            {
+              "column": "dt",
+              "kind": "comparison",
+              "literal": {
+                "kind": "literal",
+                "type": "date",
+                "value": "2024-01-02"
+              },
+              "op": "="
+            },
+            {
+              "column": "humidity",
+              "kind": "is_null",
+              "negated": false
+            }
+          ],
+          "kind": "and"
+        },
+        "referenced_columns": [
+          "dt",
+          "humidity"
+        ],
+        "rendered": "(dt = '2024-01-02' AND humidity IS NULL)"
+      },
+      "query_id": "q_readings_null_humidity",
+      "select": [
+        "station_id",
+        "humidity"
+      ],
+      "summary": {
+        "candidate_files": 1,
+        "estimated_scan_bytes": 140,
+        "full_scan": false,
+        "partition_candidate_files": 2,
+        "partition_pruned_files": 4,
+        "prune_ratio": 0.859296,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 0,
+          "must_not_match": 1,
+          "skipped_partition": 4,
+          "unknown": 1
+        },
+        "stats_pruned_files": 1,
+        "total_bytes": 995,
+        "total_files": 6
+      },
+      "table": "readings",
+      "where": "dt = '2024-01-02' AND humidity IS NULL"
+    },
+    {
+      "description": "Demonstrate case-sensitive partition comparison.",
+      "expected_columns": [
+        "station_id",
+        "region"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 139,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r2"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-02/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 140,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": null
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 144,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "region = 'R1'"
+          ],
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 188,
+          "statistics": {
+            "region": null
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 6,
+        "total": 6,
+        "undetermined": 0
+      },
+      "predicate": {
+        "ast": {
+          "column": "region",
+          "kind": "comparison",
+          "literal": {
+            "kind": "literal",
+            "type": "string",
+            "value": "R1"
+          },
+          "op": "="
+        },
+        "referenced_columns": [
+          "region"
+        ],
+        "rendered": "region = 'R1'"
+      },
+      "query_id": "q_readings_upper_region",
+      "select": [
+        "station_id",
+        "region"
+      ],
+      "summary": {
+        "candidate_files": 0,
+        "estimated_scan_bytes": 0,
+        "full_scan": false,
+        "partition_candidate_files": 0,
+        "partition_pruned_files": 6,
+        "prune_ratio": 1.0,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 0,
+          "must_not_match": 0,
+          "skipped_partition": 6,
+          "unknown": 0
+        },
+        "stats_pruned_files": 0,
+        "total_bytes": 995,
+        "total_files": 6
+      },
+      "table": "readings",
+      "where": "region = 'R1'"
+    },
+    {
+      "description": "Inspect a two-day measurement window.",
+      "expected_columns": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r1"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt BETWEEN '2024-01-02' AND '2024-01-03'"
+          ],
+          "path": "dt=2024-01-01/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 12.0,
+              "min": 10.5,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": false,
+          "partition": {
+            "dt": "2024-01-01",
+            "region": "r2"
+          },
+          "partition_decision": "pruned",
+          "partition_reasons": [
+            "dt BETWEEN '2024-01-02' AND '2024-01-03'"
+          ],
+          "path": "dt=2024-01-01/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 139,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 10.2,
+              "min": 9.5,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "skipped_partition",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "maybe_match",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 192,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 39.0,
+              "min": 12.2,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [],
+          "untrusted_columns": [
+            "value"
+          ],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-02",
+            "region": "r2"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-02/region=r2/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 140,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 31.5,
+              "min": 30.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_match",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": null
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+          "row_count": 2,
+          "size_bytes": 144,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 19.2,
+              "min": 18.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_match",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        },
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {
+            "dt": "2024-01-03",
+            "region": "r1"
+          },
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "dt=2024-01-03/region=r1/part-0001.csv",
+          "row_count": 3,
+          "size_bytes": 188,
+          "statistics": {
+            "dt": null,
+            "value": {
+              "max": 25.0,
+              "min": 20.0,
+              "null_count": 0,
+              "type": "float"
+            }
+          },
+          "stats_decision": "must_match",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 2,
+        "total": 6,
+        "undetermined": 4
+      },
+      "predicate": {
+        "ast": {
+          "children": [
+            {
+              "column": "dt",
+              "high": {
+                "kind": "literal",
+                "type": "date",
+                "value": "2024-01-03"
+              },
+              "kind": "between",
+              "low": {
+                "kind": "literal",
+                "type": "date",
+                "value": "2024-01-02"
+              }
+            },
+            {
+              "column": "value",
+              "kind": "comparison",
+              "literal": {
+                "kind": "literal",
+                "type": "float",
+                "value": 12.5
+              },
+              "op": ">="
+            }
+          ],
+          "kind": "and"
+        },
+        "referenced_columns": [
+          "dt",
+          "value"
+        ],
+        "rendered": "(dt BETWEEN '2024-01-02' AND '2024-01-03' AND value >= 12.5)"
+      },
+      "query_id": "q_readings_window",
+      "select": [
+        "station_id",
+        "observed_at",
+        "value"
+      ],
+      "summary": {
+        "candidate_files": 4,
+        "estimated_scan_bytes": 664,
+        "full_scan": false,
+        "partition_candidate_files": 4,
+        "partition_pruned_files": 2,
+        "prune_ratio": 0.332663,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 3,
+          "must_not_match": 0,
+          "skipped_partition": 2,
+          "unknown": 1
+        },
+        "stats_pruned_files": 0,
+        "total_bytes": 995,
+        "total_files": 6
+      },
+      "table": "readings",
+      "where": "dt BETWEEN '2024-01-02' AND '2024-01-03' AND value >= 12.5"
+    },
+    {
+      "description": "List active monitoring stations.",
+      "expected_columns": [
+        "station_id",
+        "active"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {},
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "data.jsonl",
+          "row_count": 4,
+          "size_bytes": 467,
+          "statistics": {
+            "active": {
+              "max": true,
+              "min": false,
+              "null_count": 0,
+              "type": "bool"
+            }
+          },
+          "stats_decision": "maybe_match",
+          "stats_reasons": [],
+          "untrusted_columns": [],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 0,
+        "total": 1,
+        "undetermined": 1
+      },
+      "predicate": {
+        "ast": {
+          "column": "active",
+          "kind": "comparison",
+          "literal": {
+            "kind": "literal",
+            "type": "bool",
+            "value": true
+          },
+          "op": "="
+        },
+        "referenced_columns": [
+          "active"
+        ],
+        "rendered": "active = true"
+      },
+      "query_id": "q_stations_active",
+      "select": [
+        "station_id",
+        "active"
+      ],
+      "summary": {
+        "candidate_files": 1,
+        "estimated_scan_bytes": 467,
+        "full_scan": true,
+        "partition_candidate_files": 1,
+        "partition_pruned_files": 0,
+        "prune_ratio": 0.0,
+        "stats_decisions": {
+          "maybe_match": 1,
+          "must_match": 0,
+          "must_not_match": 0,
+          "skipped_partition": 0,
+          "unknown": 0
+        },
+        "stats_pruned_files": 0,
+        "total_bytes": 467,
+        "total_files": 1
+      },
+      "table": "stations",
+      "where": "active = true"
+    },
+    {
+      "description": "List stations with operational notes.",
+      "expected_columns": [
+        "station_id",
+        "notes"
+      ],
+      "files": [
+        {
+          "declared_stats_decision": "unknown",
+          "drift_propagation": null,
+          "kept": true,
+          "partition": {},
+          "partition_decision": "undetermined",
+          "partition_reasons": [],
+          "path": "data.jsonl",
+          "row_count": 4,
+          "size_bytes": 467,
+          "statistics": {
+            "notes": null
+          },
+          "stats_decision": "unknown",
+          "stats_reasons": [
+            "notes IS NOT NULL"
+          ],
+          "untrusted_columns": [
+            "notes"
+          ],
+          "would_declared_prune": false
+        }
+      ],
+      "partitions": {
+        "hit": 0,
+        "pruned": 0,
+        "total": 1,
+        "undetermined": 1
+      },
+      "predicate": {
+        "ast": {
+          "column": "notes",
+          "kind": "is_null",
+          "negated": true
+        },
+        "referenced_columns": [
+          "notes"
+        ],
+        "rendered": "notes IS NOT NULL"
+      },
+      "query_id": "q_stations_notes",
+      "select": [
+        "station_id",
+        "notes"
+      ],
+      "summary": {
+        "candidate_files": 1,
+        "estimated_scan_bytes": 467,
+        "full_scan": true,
+        "partition_candidate_files": 1,
+        "partition_pruned_files": 0,
+        "prune_ratio": 0.0,
+        "stats_decisions": {
+          "maybe_match": 0,
+          "must_match": 0,
+          "must_not_match": 0,
+          "skipped_partition": 0,
+          "unknown": 1
+        },
+        "stats_pruned_files": 0,
+        "total_bytes": 467,
+        "total_files": 1
+      },
+      "table": "stations",
+      "where": "notes IS NOT NULL"
+    }
+  ],
+  "risks": [
+    {
+      "code": "MIS_PRUNE_RISK",
+      "description": "untrusted statistics would have pruned a file that remains a scan candidate",
+      "evidence": {
+        "declared_stats_decision": "must_not_match",
+        "effective_stats_decision": "unknown",
+        "statistics": {
+          "dt": null,
+          "value": {
+            "max": 39.0,
+            "min": 12.2,
+            "null_count": 0,
+            "type": "float"
+          }
+        },
+        "stats_reasons": [],
+        "untrusted_columns": [
+          "value"
+        ]
+      },
+      "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+      "level": "high",
+      "query_id": "q_readings_hot_day",
+      "risk_id": "R-a98e0eb03f96",
+      "table": "readings"
+    },
+    {
+      "code": "STATS_MISMATCH",
+      "description": "declared statistics are not reliable for column value",
+      "evidence": {
+        "actual": {
+          "max": 42.0,
+          "min": 12.2,
+          "null_count": 0,
+          "type": "float"
+        },
+        "check_message": "max: declared=39.0 actual=42.0",
+        "column": "value",
+        "declared": {
+          "max": 39.0,
+          "min": 12.2,
+          "null_count": 0,
+          "type": "float"
+        }
+      },
+      "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+      "level": "high",
+      "query_id": null,
+      "risk_id": "R-90713c5e3cbd",
+      "table": "readings"
+    },
+    {
+      "code": "TYPE_DRIFT",
+      "description": "actual data violates declared type for column battery_pct",
+      "evidence": {
+        "actual": {
+          "max": 25,
+          "min": 18,
+          "null_count": 0,
+          "type": "int",
+          "type_drift_count": 1,
+          "type_drift_samples": [
+            {
+              "row": 3,
+              "value": "retry"
+            }
+          ]
+        },
+        "check_message": "actual values violate declared int type; samples=[{'row': 3, 'value': 'retry'}]",
+        "column": "battery_pct",
+        "declared": {
+          "max": 88,
+          "min": 18,
+          "null_count": 0,
+          "type": "int"
+        }
+      },
+      "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+      "level": "high",
+      "query_id": null,
+      "risk_id": "R-52918496786f",
+      "table": "events"
+    },
+    {
+      "code": "BOUNDARY_RISK",
+      "description": "date/time, floating-point or case-sensitive comparison may have boundary semantics",
+      "evidence": {
+        "date_or_datetime_fragments": [
+          "dt >= '2024-01-02'"
+        ],
+        "float_or_case_fragments": []
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_readings_hot_day",
+      "risk_id": "R-75b8441790cb",
+      "table": "readings"
+    },
+    {
+      "code": "BOUNDARY_RISK",
+      "description": "date/time, floating-point or case-sensitive comparison may have boundary semantics",
+      "evidence": {
+        "date_or_datetime_fragments": [
+          "dt = '2024-01-02'"
+        ],
+        "float_or_case_fragments": []
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_readings_null_humidity",
+      "risk_id": "R-b39160162a5c",
+      "table": "readings"
+    },
+    {
+      "code": "BOUNDARY_RISK",
+      "description": "date/time, floating-point or case-sensitive comparison may have boundary semantics",
+      "evidence": {
+        "date_or_datetime_fragments": [],
+        "float_or_case_fragments": [
+          "region = 'R1'"
+        ]
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_readings_upper_region",
+      "risk_id": "R-c54e28131803",
+      "table": "readings"
+    },
+    {
+      "code": "BOUNDARY_RISK",
+      "description": "date/time, floating-point or case-sensitive comparison may have boundary semantics",
+      "evidence": {
+        "date_or_datetime_fragments": [
+          "dt BETWEEN '2024-01-02' AND '2024-01-03'"
+        ],
+        "float_or_case_fragments": []
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_readings_window",
+      "risk_id": "R-48b954a6f18e",
+      "table": "readings"
+    },
+    {
+      "code": "EMPTY_PARTITION",
+      "description": "partition has no scannable rows: dt=2024-01-03;region=r1",
+      "evidence": {
+        "files": [
+          "dt=2024-01-03/region=r1/part-0001.csv"
+        ],
+        "partition": {
+          "dt": "2024-01-03",
+          "region": "r1"
+        },
+        "row_count": 0
+      },
+      "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+      "level": "warn",
+      "query_id": null,
+      "risk_id": "R-5aaef8d9a780",
+      "table": "events"
+    },
+    {
+      "code": "FULL_SCAN_RISK",
+      "description": "predicate cannot prune any file; the entire table will be scanned",
+      "evidence": {
+        "candidate_files": 1,
+        "partitions": {
+          "hit": 0,
+          "pruned": 0,
+          "total": 1,
+          "undetermined": 1
+        },
+        "total_bytes": 467,
+        "total_files": 1
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_stations_active",
+      "risk_id": "R-a492b96055ab",
+      "table": "stations"
+    },
+    {
+      "code": "FULL_SCAN_RISK",
+      "description": "predicate cannot prune any file; the entire table will be scanned",
+      "evidence": {
+        "candidate_files": 1,
+        "partitions": {
+          "hit": 0,
+          "pruned": 0,
+          "total": 1,
+          "undetermined": 1
+        },
+        "total_bytes": 467,
+        "total_files": 1
+      },
+      "file_path": null,
+      "level": "warn",
+      "query_id": "q_stations_notes",
+      "risk_id": "R-273601f3e1f3",
+      "table": "stations"
+    },
+    {
+      "code": "MISSING_STATS",
+      "description": "missing file statistics for column battery_pct",
+      "evidence": {
+        "actual": {
+          "max": 30,
+          "min": 20,
+          "null_count": 0,
+          "type": "int"
+        },
+        "check_message": "declared file statistics are missing for this column",
+        "column": "battery_pct",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "int"
+        }
+      },
+      "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+      "level": "warn",
+      "query_id": null,
+      "risk_id": "R-630342cc7a8a",
+      "table": "events"
+    },
+    {
+      "code": "MISSING_STATS",
+      "description": "missing file statistics for column humidity",
+      "evidence": {
+        "actual": {
+          "max": 60.0,
+          "min": 60.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "check_message": "declared file statistics are missing for this column",
+        "column": "humidity",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "float"
+        }
+      },
+      "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+      "level": "warn",
+      "query_id": null,
+      "risk_id": "R-4dc9ef981986",
+      "table": "readings"
+    },
+    {
+      "code": "MISSING_STATS",
+      "description": "missing file statistics for column notes",
+      "evidence": {
+        "actual": {
+          "max": "ridge site",
+          "min": "coastal backup",
+          "null_count": 2,
+          "type": "string"
+        },
+        "check_message": "declared file statistics are missing for this column",
+        "column": "notes",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "string"
+        }
+      },
+      "file_path": "data.jsonl",
+      "level": "warn",
+      "query_id": null,
+      "risk_id": "R-52b4e1ac38a7",
+      "table": "stations"
+    },
+    {
+      "code": "NULL_SEMANTICS",
+      "description": "NULL predicate cannot be resolved because null_count statistics are missing or untrusted",
+      "evidence": {
+        "predicate": "(dt = '2024-01-02' AND humidity IS NULL)",
+        "stats_decision": "unknown",
+        "untrusted_columns": [
+          "humidity"
+        ]
+      },
+      "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+      "level": "warn",
+      "query_id": "q_readings_null_humidity",
+      "risk_id": "R-a31488d550d6",
+      "table": "readings"
+    },
+    {
+      "code": "NULL_SEMANTICS",
+      "description": "NULL predicate cannot be resolved because null_count statistics are missing or untrusted",
+      "evidence": {
+        "predicate": "notes IS NOT NULL",
+        "stats_decision": "unknown",
+        "untrusted_columns": [
+          "notes"
+        ]
+      },
+      "file_path": "data.jsonl",
+      "level": "warn",
+      "query_id": "q_stations_notes",
+      "risk_id": "R-4f0e72cbc103",
+      "table": "stations"
+    }
+  ],
+  "schema_version": "1.0",
+  "stats_audit": {
+    "checks": [
+      {
+        "actual": {
+          "max": 15,
+          "min": 10,
+          "null_count": 0,
+          "type": "int"
+        },
+        "column": "battery_pct",
+        "declared": {
+          "max": 15,
+          "min": 10,
+          "null_count": 0,
+          "type": "int"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "evt-demo-1002",
+          "min": "evt-demo-1001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "event_id",
+        "declared": {
+          "max": "evt-demo-1002",
+          "min": "evt-demo-1001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "2024-01-01T06:00:00",
+          "min": "2024-01-01T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "recorded_at",
+        "declared": {
+          "max": "2024-01-01T06:00:00",
+          "min": "2024-01-01T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "ok",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "status",
+        "declared": {
+          "max": "ok",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": 30,
+          "min": 20,
+          "null_count": 0,
+          "type": "int"
+        },
+        "column": "battery_pct",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "int"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared file statistics are missing for this column",
+        "status": "missing_stats",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "evt-demo-2002",
+          "min": "evt-demo-2001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "event_id",
+        "declared": {
+          "max": "evt-demo-2002",
+          "min": "evt-demo-2001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "2024-01-01T08:00:00",
+          "min": "2024-01-01T07:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "recorded_at",
+        "declared": {
+          "max": "2024-01-01T08:00:00",
+          "min": "2024-01-01T07:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "retry",
+          "min": "retry",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "status",
+        "declared": {
+          "max": "retry",
+          "min": "retry",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": 25,
+          "min": 18,
+          "null_count": 0,
+          "type": "int",
+          "type_drift_count": 1,
+          "type_drift_samples": [
+            {
+              "row": 3,
+              "value": "retry"
+            }
+          ]
+        },
+        "column": "battery_pct",
+        "declared": {
+          "max": 88,
+          "min": 18,
+          "null_count": 0,
+          "type": "int"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "actual values violate declared int type; samples=[{'row': 3, 'value': 'retry'}]",
+        "status": "type_drift",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "evt-demo-3003",
+          "min": "evt-demo-3001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "event_id",
+        "declared": {
+          "max": "evt-demo-3003",
+          "min": "evt-demo-3001",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "2024-01-02T07:00:00",
+          "min": "2024-01-02T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "recorded_at",
+        "declared": {
+          "max": "2024-01-02T07:00:00",
+          "min": "2024-01-02T05:00:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": "retry",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "status",
+        "declared": {
+          "max": "retry",
+          "min": "ok",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "int"
+        },
+        "column": "battery_pct",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "int"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "event_id",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "recorded_at",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "status",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "events"
+      },
+      {
+        "actual": {
+          "max": 42.0,
+          "min": 40.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": 42.0,
+          "min": 40.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-01T02:10:00",
+          "min": "2024-01-01T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-01T02:10:00",
+          "min": "2024-01-01T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 12.0,
+          "min": 10.5,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 12.0,
+          "min": 10.5,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-01/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 38.0,
+          "min": 38.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": 38.0,
+          "min": 38.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-01T04:10:00",
+          "min": "2024-01-01T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-01T04:10:00",
+          "min": "2024-01-01T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 10.2,
+          "min": 9.5,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 10.2,
+          "min": 9.5,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-01/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 55.0,
+          "min": 44.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": 55.0,
+          "min": 44.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-02T02:10:00",
+          "min": "2024-01-02T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-02T02:10:00",
+          "min": "2024-01-02T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-02",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 42.0,
+          "min": 12.2,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 39.0,
+          "min": 12.2,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-02/region=r1/part-0001.csv",
+        "message": "max: declared=39.0 actual=42.0",
+        "status": "stats_mismatch",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 60.0,
+          "min": 60.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+        "message": "declared file statistics are missing for this column",
+        "status": "missing_stats",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-02T04:10:00",
+          "min": "2024-01-02T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-02T04:10:00",
+          "min": "2024-01-02T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-03",
+          "min": "station-demo-02",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 31.5,
+          "min": 30.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 31.5,
+          "min": 30.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-02/region=r2/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 41.0,
+          "min": 39.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": 41.0,
+          "min": 39.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-03T04:10:00",
+          "min": "2024-01-03T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-03T04:10:00",
+          "min": "2024-01-03T03:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-04",
+          "min": "station-demo-04",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-04",
+          "min": "station-demo-04",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 19.2,
+          "min": 18.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 19.2,
+          "min": 18.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-03/region=__HIVE_DEFAULT_PARTITION__/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 51.0,
+          "min": 47.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "column": "humidity",
+        "declared": {
+          "max": 51.0,
+          "min": 47.0,
+          "null_count": 1,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "2024-01-03T02:10:00",
+          "min": "2024-01-03T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "column": "observed_at",
+        "declared": {
+          "max": "2024-01-03T02:10:00",
+          "min": "2024-01-03T00:10:00",
+          "null_count": 0,
+          "type": "datetime"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": "station-demo-03",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-03",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": 25.0,
+          "min": 20.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "column": "value",
+        "declared": {
+          "max": 25.0,
+          "min": 20.0,
+          "null_count": 0,
+          "type": "float"
+        },
+        "file_path": "dt=2024-01-03/region=r1/part-0001.csv",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "readings"
+      },
+      {
+        "actual": {
+          "max": true,
+          "min": false,
+          "null_count": 0,
+          "type": "bool"
+        },
+        "column": "active",
+        "declared": {
+          "max": true,
+          "min": false,
+          "null_count": 0,
+          "type": "bool"
+        },
+        "file_path": "data.jsonl",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "stations"
+      },
+      {
+        "actual": {
+          "max": 210,
+          "min": 45,
+          "null_count": 0,
+          "type": "int"
+        },
+        "column": "elevation_m",
+        "declared": {
+          "max": 210,
+          "min": 45,
+          "null_count": 0,
+          "type": "int"
+        },
+        "file_path": "data.jsonl",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "stations"
+      },
+      {
+        "actual": {
+          "max": "ridge site",
+          "min": "coastal backup",
+          "null_count": 2,
+          "type": "string"
+        },
+        "column": "notes",
+        "declared": {
+          "max": null,
+          "min": null,
+          "null_count": null,
+          "type": "string"
+        },
+        "file_path": "data.jsonl",
+        "message": "declared file statistics are missing for this column",
+        "status": "missing_stats",
+        "table": "stations"
+      },
+      {
+        "actual": {
+          "max": "2023-11-02",
+          "min": "2021-04-01",
+          "null_count": 0,
+          "type": "date"
+        },
+        "column": "opened_on",
+        "declared": {
+          "max": "2023-11-02",
+          "min": "2021-04-01",
+          "null_count": 0,
+          "type": "date"
+        },
+        "file_path": "data.jsonl",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "stations"
+      },
+      {
+        "actual": {
+          "max": "station-demo-04",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "column": "station_id",
+        "declared": {
+          "max": "station-demo-04",
+          "min": "station-demo-01",
+          "null_count": 0,
+          "type": "string"
+        },
+        "file_path": "data.jsonl",
+        "message": "declared statistics match recomputed values",
+        "status": "ok",
+        "table": "stations"
+      }
+    ],
+    "summary": {
+      "columns_checked": 45,
+      "files_checked": 11,
+      "manifest_fingerprint": "40b843058f6a0987abc1687e43c8304eca473aac141d3526f0638c94bfff6563",
+      "status_counts": {
+        "missing_stats": 3,
+        "ok": 40,
+        "stats_mismatch": 1,
+        "type_drift": 1
+      },
+      "untrusted_columns": 5,
+      "untrusted_files": 5
+    }
+  },
+  "summary": {
+    "candidate_files": 10,
+    "estimated_scan_bytes": 2252,
+    "file_count": 11,
+    "query_count": 7,
+    "risk_codes": {
+      "BOUNDARY_RISK": 4,
+      "EMPTY_PARTITION": 1,
+      "FULL_SCAN_RISK": 2,
+      "MISSING_STATS": 3,
+      "MIS_PRUNE_RISK": 1,
+      "NULL_SEMANTICS": 2,
+      "STATS_MISMATCH": 1,
+      "TYPE_DRIFT": 1
+    },
+    "risk_counts": {
+      "high": 3,
+      "info": 0,
+      "warn": 12
+    },
+    "risk_total": 15,
+    "stats_status_counts": {
+      "missing_stats": 3,
+      "ok": 40,
+      "stats_mismatch": 1,
+      "type_drift": 1
+    },
+    "table_bytes": 1968,
+    "table_count": 3
+  },
+  "tool": "lakeprune"
+}

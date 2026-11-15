@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from lakeprune.drift_propagation import trace_drift_propagation
 from lakeprune.models import FileEntry, QuerySpec, TableManifest
 from lakeprune.partition import evaluate_partition, partition_label
 from lakeprune.predicate_ast import Expr, ast_to_dict, referenced_columns
@@ -30,6 +31,7 @@ class FilePlan:
     declared_stats_decision: str
     would_declared_prune: bool
     statistics: Mapping[str, Any]
+    drift_propagation: Mapping[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -46,6 +48,9 @@ class FilePlan:
             "declared_stats_decision": self.declared_stats_decision,
             "would_declared_prune": self.would_declared_prune,
             "statistics": dict(self.statistics),
+            "drift_propagation": (
+                dict(self.drift_propagation) if self.drift_propagation is not None else None
+            ),
         }
 
 @dataclass(frozen=True)
@@ -126,8 +131,10 @@ def build_query_plan(
     expression: Expr,
     manifest: TableManifest,
     untrusted: Mapping[str, set[str]] | None = None,
+    drift_columns: Mapping[str, set[str]] | None = None,
 ) -> QueryPlan:
     untrusted = untrusted or {}
+    drift_columns = drift_columns or {}
     referenced = referenced_columns(expression)
     partition_columns = manifest.partition_columns
     grouped: dict[str, list[FileEntry]] = {}
@@ -208,6 +215,13 @@ def build_query_plan(
             )
             declared_decision = declared.decision
             would_declared_prune = kept and declared.decision == MUST_NOT_MATCH
+        propagation = None
+        file_drift = set(drift_columns.get(entry.path, ()))
+        if file_drift & set(referenced):
+            propagation = trace_drift_propagation(
+                expression, entry, manifest.columns, file_drift,
+                set(relevant_untrusted), manifest.partition_columns, entry.partition,
+            )
         file_plans.append(
             FilePlan(
                 entry.path,
@@ -223,6 +237,7 @@ def build_query_plan(
                 declared_decision,
                 would_declared_prune,
                 _statistics_snapshot(entry, referenced),
+                propagation,
             )
         )
     file_plans.sort(key=lambda item: item.path)

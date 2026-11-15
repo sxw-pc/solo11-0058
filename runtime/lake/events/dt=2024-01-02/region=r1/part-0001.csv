@@ -1,0 +1,4 @@
+event_id,status,battery_pct,recorded_at,dt,region
+evt-demo-3001,ok,25,2024-01-02T05:00:00,,
+evt-demo-3002,retry,18,2024-01-02T06:00:00,,
+evt-demo-3003,ok,retry,2024-01-02T07:00:00,,

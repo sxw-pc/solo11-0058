@@ -41,6 +41,7 @@ config.py ──► manifest.py ──► partition.py
 | `predicate.py` | 递归下降 parser + 类型校验，生成显式 AST，不使用 eval/exec |
 | `predicate_ast.py` | AST 节点、稳定渲染、三值逻辑组合、叶节点遍历和 AST JSON 序列化 |
 | `stats.py` | 校验声明统计，基于 min/max/null_count 做保守文件级决定；分区列使用精确分区值 |
+| `drift_propagation.py` | 复用 `stats.make_leaf_evaluator` 做有效/盲信双路求值，逐叶子追踪 TYPE_DRIFT 列是否传导到裁剪决定 |
 | `stats_audit.py` | 重新读取 CSV/JSONL，重算统计，校验类型、大小、哈希、行数，输出可信度与 untrusted map |
 | `prune.py` | 组合分区阶段与统计阶段，构建可解释的 QueryPlan/FilePlan 和误裁剪候选 |
 | `risks.py` | 八类风险的生成、稳定去重排序、级别统计和退出码 gate |
@@ -61,7 +62,8 @@ config.py ──► manifest.py ──► partition.py
 4. **分区裁剪**：按分区标签分组，用精确分区赋值求值；非分区列叶子在分区阶段返回 unknown，不误裁。AND/OR/NOT 使用 `{True, False, None}` 三值组合。
 5. **文件裁剪**：对未分区裁剪的文件使用声明统计求值；不可信、缺失或无效统计返回 unknown。分区列始终使用精确分区值，不用文件统计。
 6. **误裁剪证据**：若某文件因不可信统计被保留，但盲信声明统计会得到 `must_not_match`，则标记 `would_declared_prune` 并生成 `MIS_PRUNE_RISK`。
-7. **报告与台账**：报告只包含确定性内容（无 run ID、无时间戳）；运行时间和 run ID 仅进入 SQLite。JSON/Markdown 字节稳定，HTML 结构稳定。
+7. **漂移传导分析**：`risks.drift_column_map` 汇总 manifest issue 与统计复核中的 TYPE_DRIFT 列；`prune.build_query_plan` 对每个引用了漂移列的 （查询， 文件） 调用 `drift_propagation.trace_drift_propagation`，把逐叶子证据挂到 `FilePlan.drift_propagation`，再由 `risks.collect_drift_propagation` 汇总为报告顶层 `drift_propagation` 段。该分析只解释既有决定，不产生新风险、不改变退出码。
+8. **报告与台账**：报告只包含确定性内容（无 run ID、无时间戳）；运行时间和 run ID 仅进入 SQLite。JSON/Markdown 字节稳定，HTML 结构稳定。
 
 ## 确定性与排序
 

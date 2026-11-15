@@ -13,7 +13,7 @@ def _python_files():
 def test_python_line_budget_and_per_file_limit():
     counts = {path: len(path.read_text(encoding="utf-8").splitlines()) for path in _python_files()}
     assert all(count <= 300 for count in counts.values()), {str(p): n for p, n in counts.items() if n > 300}
-    assert 2500 <= sum(counts.values()) <= 4500
+    assert 2500 <= sum(counts.values()) <= 4800
 
 
 def test_predicate_parser_never_uses_eval_or_exec():

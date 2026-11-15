@@ -48,6 +48,17 @@
 
 此类列不用于裁剪，避免类型误判。
 
+### TYPE_DRIFT 传导分析（`drift_propagation` 报告段）
+
+`TYPE_DRIFT` 风险本身只标记“哪些文件哪些列漂移”。报告顶层的 `drift_propagation` 段进一步回答：某条漂移是否真的走进了某个查询对某个文件的裁剪求值路径、最终保留是否被它改变。漂移列来源为 manifest issue（含分区路径问题）与统计复核的 `type_drift` 状态。每个被引用漂移列的 （查询， 文件） 产生一条记录：
+
+- `propagated_columns` / `non_propagated_columns`：逐列结论。未被谓词引用的漂移列记为 `not_referenced`；与分区列重名的漂移列由 `exact_leaf_evaluation` 精确求值覆盖漂移信号，记为 `partition_exact` 并附 `exact_leaves` 精确结果。两者均为不传导。
+- `leaves`：每个被传导列命中的叶子片段（comparison / in / between / is_null），含有效求值（降级为 `[null, false, true]`）与盲信求值的真值集合、`branches`（AND/OR 祖先分支、左右侧、另一侧是否也受漂移影响）以及 `not_evidence`（叶子处于 NOT 之下时，记录该子树漂移降级前后的三值集合，即它对父级的贡献方向）。
+- `asymmetric_nodes`：仅在 AND/OR 节点上、且文件最终真值仍含 True（未裁剪）时，标注“盲信为 `must_not_match`、降级后变为非 `must_not_match`”的不对称结论。
+- `decisions` 与 `conclusion`：`effective`（实际降级求值）与 `trusted_without_drift`（盲信漂移列声明统计的反事实）两组决定；`pruning_trustworthy` 为假当且仅当盲信会裁剪而实际保留（`changed_by_drift`），此时 `retained_only_as_unknown` 表示该文件是在漂移列逐叶子标注后仅以 `unknown` 保留。
+
+该分析不产生新风险、不改变风险排序与退出码；分区阶段已裁剪的文件不进入统计求值路径，因此不产生记录。
+
 ### `NULL_SEMANTICS`（warn）
 
 查询包含 `IS NULL` / `IS NOT NULL`，且某文件的相关谓词涉及不可信列（通常因 `null_count` 缺失、无效或整文件完整性失败）。因为空值谓词无法可靠判定，文件保留为候选；风险证据包含谓词渲染文本、不可信列和统计决定。

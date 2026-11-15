@@ -13,7 +13,13 @@ from lakeprune.prune import QueryPlan, build_query_plan
 from lakeprune.report_html import write_html
 from lakeprune.report_json import write_json
 from lakeprune.report_markdown import write_markdown
-from lakeprune.risks import build_risks, exit_code_for_level, summarize_risks
+from lakeprune.risks import (
+    build_risks,
+    collect_drift_propagation,
+    drift_column_map,
+    exit_code_for_level,
+    summarize_risks,
+)
 from lakeprune.stats_audit import StatsAuditResult, audit_stats
 from lakeprune.storage import new_run_id, record_run
 
@@ -49,6 +55,7 @@ def build_report(
             "checks": [check.to_dict() for check in audit.checks],
         },
         "queries": [plan.to_dict() for plan in plans],
+        "drift_propagation": collect_drift_propagation(plans),
         "risks": [risk.to_dict() for risk in risks],
         "summary": summary,
     }
@@ -65,6 +72,7 @@ def run_audit(
     manifests, manifest_issues, fingerprint = load_lake(config.lake_root, config.tables)
     queries = load_queries(config.queries_path, manifests)
     audit = stats_audit or audit_stats(config.lake_root, manifests)
+    drift = drift_column_map(manifest_issues, audit)
     plans: list[QueryPlan] = []
     for query in sorted(queries, key=lambda item: item.query_id):
         manifest = manifests[query.table]
@@ -76,7 +84,8 @@ def run_audit(
                 exc.code,
             ) from exc
         untrusted = audit.untrusted.get(query.table, {})
-        plans.append(build_query_plan(query, expression, manifest, untrusted))
+        plans.append(build_query_plan(query, expression, manifest, untrusted,
+                                      drift.get(query.table)))
     all_risks = build_risks(manifest_issues, audit, plans)
     effective_fail_on = fail_on if fail_on is not None else config.fail_on
     exit_code = exit_code_for_level(effective_fail_on, all_risks)
